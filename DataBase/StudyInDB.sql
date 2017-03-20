@@ -4,22 +4,33 @@ CREATE DATABASE IF NOT EXISTS StudyIn;
 	
 DROP TABLE IF EXISTS accounts;
 CREATE TABLE IF NOT EXISTS accounts (
-	id INT(1) NOT NULL auto_increment,
-	name VARCHAR(13) NOT NULL,
-	password VARCHAR(128) NOT NULL,
-	salt VARCHAR(32) NOT NULL,
-	lastlogin timestamp NULL DEFAULT NULL,
-	birthday date NOT NULL DEFAULT '0000-00-00',
-	administrator INT(1) NOT NULL  DEFAULT 0,
-	ip text,
+    id INT(1) NOT NULL AUTO_INCREMENT,
+    name VARCHAR(13) NOT NULL,
+    password VARCHAR(128) NOT NULL,
+    salt VARCHAR(32) NOT NULL,
+    lastlogin TIMESTAMP NULL DEFAULT NULL,
+    birthday DATE NOT NULL DEFAULT '0000-00-00',
+    administrator INT(1) NOT NULL DEFAULT 0,
+    ip TEXT,
+    PRIMARY KEY (id)
+)  ENGINE=INNODB DEFAULT CHARSET=UTF8;
 
+INSERT INTO accounts (id, name,password,salt,lastlogin,birthday, administrator, ip) VALUES
+	(1, 'admin', 'a89b8cd1dcee6f4eb91a450dadf49a28d2149240','0000','0000-00-00','0000-00-00','0' , '127.0.0.1' );
+	(2, 'admin2', 'a89b8cd1dcee6f4eb91a450dadf49a28d2149240','0000','0000-00-00','0000-00-00','0' , '127.0.0.1' );
+    
+DROP TABLE IF EXISTS messages;
+CREATE TABLE IF NOT EXISTS group_wall (
+	id INT(1) NOT NULL auto_increment,
+	txt VARCHAR(140) NOT NULL,
+	sender_id INT(1) NOT NULL,
+	reciver_id INT(1) NOT NULL,
 	
-	PRIMARY KEY(id)
+	PRIMARY KEY (id)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---Uses SHA1 encyption to generate secret
-INSERT INTO accounts (id, name,password,salt,lastlogin,birthday, administrator, ip) VALUES
-	(1, 'admin', 'a89b8cd1dcee6f4eb91a450dadf49a28d2149240','0000-00-00' , 9 );
+INSERT INTO course_wall (id, txt, sender_id,reciver_id) VALUE
+	(1,'testing message', 1, 2);
 
 DROP TABLE IF EXISTS courses;	
 CREATE TABLE IF NOT EXISTS courses (
@@ -69,3 +80,18 @@ CREATE TABLE IF NOT EXISTS group_enrol (
 
 INSERT INTO group_enrol (id, char_id, group_id,priv_level) VALUE
 	(1,1, 1, 1);
+    
+DROP TABLE IF EXISTS course_wall;
+CREATE TABLE IF NOT EXISTS group_wall (
+	id INT(1) NOT NULL auto_increment,
+	subj VARCHAR(40) NOT NULL,
+	txt VARCHAR(140) NOT NULL,
+	course_id INT(1) NOT NULL,
+	group_id INT(1) NOT NULL,
+	
+	PRIMARY KEY (id)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+INSERT INTO course_wall (id,subj, txt, course_id,group_id) VALUE
+	(1,'Test','testing group ', 3308, 1);
+	
