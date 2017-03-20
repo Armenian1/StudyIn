@@ -29,7 +29,7 @@ CREATE TABLE IF NOT EXISTS group_wall (
 	PRIMARY KEY (id)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-INSERT INTO course_wall (id, txt, sender_id,reciver_id) VALUE
+INSERT INTO messages (id, txt, sender_id,reciver_id) VALUE
 	(1,'testing message', 1, 2);
 
 DROP TABLE IF EXISTS courses;	
