@@ -4,10 +4,8 @@ if(basename($_SERVER["PHP_SELF"]) == "login.php") {
 	die("403 - Access Forbidden");
 }
 
-#	Login page for a website which provides a common base to find study groups at CU Boulder
-session_start(); # added, working before
-include('common.php');
-ensureLoggedOut();
+#	Register page for a website which provides a common base to find study groups at CU Boulder
+session_start();
 ?>
 
 
@@ -30,10 +28,10 @@ ensureLoggedOut();
 				No grades or personal information will be used or stored, only class info.
 			</p>
 
-			<form id="register_form" action="login.php" method="post">
-				<div><input name="name" type="text" size="8" autofocus="autofocus" /> <strong>User Name</strong></div>
-				<div><input name="password" type="password" size="8" /> <strong>Password</strong></div>
-				<div><input name="password2" type="password" size="8" required/> <strong>Repeat Password</strong></div>				
+			<form id="register_form" action="/../handlers/register.php" method="post">
+				<div><input name="name" type="text" size="32" autofocus="autofocus" /> <strong>User Name</strong></div>
+				<div><input name="password" type="password" size="32" /> <strong>Password</strong></div>
+				<div><input name="password2" type="password" size="32" required/> <strong>Repeat Password</strong></div>				
 				<div><input name="birthday" type="text" size="8" /> <strong>Password</strong></div>
 				<div><input name="email" type="password" size="8" /> <strong>Email</strong></div>
 				<div><p>By creating an account you agree to our <a href="#">Terms & Privacy(COMMING SOON)</a>.</p></div>
@@ -42,8 +40,4 @@ ensureLoggedOut();
 				  <button type="submit" class="signupbtn">Sign Up</button>
 				</div>
 			</form>
-
-			<p>
-				<em>(last login from this computer was <?= $_COOKIE['date'] ?>)</em>
-			</p>
 		</div>

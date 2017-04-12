@@ -1,19 +1,3 @@
-<?php 
-session_start();
-	# Get Database Information
-	require_once("../assets/config/database.php");
-	
-	# Define $getbase variable
-	$getbase = isset($_GET['base']) ? $_GET['base'] : "";
-	#Check if Login Exists
-
-	#If Login Exists login
-	
-	#Else Authenticate using mycuinfo
-	
-$mysqli->close();
-?>
-
 <?php
 #	Intermediary page which logs the user in if provided existing account info,
 #	returns the user to the starting page if provided a known username and
