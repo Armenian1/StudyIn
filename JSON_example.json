@@ -1,0 +1,16 @@
+{ 
+ "_id" : {"$token_id" : "52b213b38594d8a2be17c780" },
+ "season" : "Fall",
+ "semester" : 2017,
+ "student_ID" : "101476834",
+ "institution": "university of colorado boulder"
+ "identification_key" : "alpa4421"
+ "status" : "undergraduate"
+
+ "enrolled courses" : [ 
+ { "Name" : "Software Dev Methods and Tools", "Department": "CSCI" , "Time" : "12:30:pm:m:w:f", "Section": 400 },
+ { "Name" : "Software Dev Methods and Tools Recitation", "Department": "CSCI" , "Time" : "6:30:pm:th", "Section": 134 },
+ { "Name" : "Algorithims", "Department": "CSCI" , "Time" : "8:00:am:m:w:f", "Section": 600 },
+ { "Name" : "Special Topics in computer science", "Department": "CSCI" , "Time" : "1:30:pm:m:w:f", "Section": 200 }]
+ 
+}
