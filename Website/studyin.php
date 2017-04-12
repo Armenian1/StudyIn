@@ -27,39 +27,16 @@ if (file_exists($fileName)) {
 	<body>
 		<div class="headfoot">
 			<h1>
-				<img id="buff" src="http://carshare.org/2016dev/wp-content/uploads/2013/10/CU-Buffs.png" alt="logo" />
+				<!-- <img id="buff" src="http://carshare.org/2016dev/wp-content/uploads/2013/10/CU-Buffs.png" alt="logo" /> -->
 				StudyIn<br />CU Boulder
 			</h1>
 		</div>
 
 		<div id="main">
-			<h2><?= $name ?>'s Class List</h2>
 
-			<ul id="todolist">
-				<?php
-					# count() will conveniently return 0 if a variable is not set
-					for ($i = 0; $i < count($todo); $i++) {
-				?>
-				<li>
-					<form action="submit.php" method="post">
-						<input type="hidden" name="action" value="delete" />
-						<input type="hidden" name="index" value=<?= '"' . $i . '"' ?> />
-						<input type="submit" value="Delete" />
-					</form>
-					<?= htmlspecialchars($todo[$i]) ?>
-				</li>
-				<?php
-					}
-				?>
-				<li>
-					<form action="submit.php" method="post">
-						<input type="hidden" name="action" value="add" />
-						<input name="item" type="text" size="25" autofocus="autofocus" />
-						<input type="submit" value="Add" />
-					</form>
-				</li>
-			</ul>
+			<?php include('schedule.php'); ?>
 
+			<br/><br/><br/>
 			<div>
 				<a href="logout.php"><strong>Log Out</strong></a>
 				<em>(logged in since <?= $_COOKIE['date'] ?>)</em>
