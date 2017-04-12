@@ -35,8 +35,8 @@ class MyAPI extends API
 		$list_claim = json_decode(base64_decode($claim));
 		#No signiture create account
 		if($this->method == 'POST') {
-			$qry = $mysqli->prepare("INSERT INTO accounts  (name,sha1,birthday,email, ip) VALUES (?,?,?,?,?,'0.0.0.0')");
-			$qry->bind_param("ssss", $list_claim[''],$list_claim[''],$list_claim[''],$list_claim[''],$list_claim['']);
+			$qry = $mysqli->prepare("INSERT INTO accounts  (name,sha1,birthday,email, ip) VALUES (?,?,?,?,'0.0.0.0')");
+			$qry->bind_param("ssss", $list_claim['name'],$list_claim['sha1'],$list_claim['birthday'],$list_claim['email']);
 			$result = $conn->query($qry);
 		#Gets online users
 		} else if($this->method == 'GET'){

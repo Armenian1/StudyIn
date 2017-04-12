@@ -26,14 +26,21 @@ ensureLoggedOut();
 			</p>
 
 			<p>
-				Log in with your CU Identikey for your information to be filled out automatically. <br />
+				Register now and connect with your Identikey for your information to be filled out automatically. <br />
 				No grades or personal information will be used or stored, only class info.
 			</p>
 
 			<form id="register_form" action="login.php" method="post">
 				<div><input name="name" type="text" size="8" autofocus="autofocus" /> <strong>User Name</strong></div>
 				<div><input name="password" type="password" size="8" /> <strong>Password</strong></div>
-				<div><input type="submit" value="Log in" /></div>
+				<div><input name="password2" type="password" size="8" required/> <strong>Repeat Password</strong></div>				
+				<div><input name="birthday" type="text" size="8" /> <strong>Password</strong></div>
+				<div><input name="email" type="password" size="8" /> <strong>Email</strong></div>
+				<div><p>By creating an account you agree to our <a href="#">Terms & Privacy(COMMING SOON)</a>.</p></div>
+				<div class="clearfix">
+				  <button type="button"  class="cancelbtn">Cancel</button>
+				  <button type="submit" class="signupbtn">Sign Up</button>
+				</div>
 			</form>
 
 			<p>
