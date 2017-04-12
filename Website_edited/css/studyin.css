@@ -1,0 +1,28 @@
+body {
+	margin: 0px;
+	padding-top: 0px;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 14pt;
+	color: black;
+}
+
+.headfoot {
+	background-color: black;
+	color: #ffd700;
+	margin-top: 0px;
+	margin-bottom: 0px;
+	min-height: 145px;
+	padding: 1px;
+}
+
+#main {
+	padding: 2em;
+	min-height: 385px;
+}
+
+#buff {
+	max-height: 128px;
+	max-width: 175px;
+	margin: 10px;
+	float: left;
+}
