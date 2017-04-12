@@ -13,6 +13,10 @@ include('common.php');
 			case "admin":
 				include("assets/template/header.php");
 				include("ss_administrator/login.php");
+			case "register":
+				include("assets/template/header.php");
+				include("assets/includes/register.php");
+				include("assets/template/header.php");
 			default:
 				include("assets/template/header.php");
 				include("assets/includes/login.php");

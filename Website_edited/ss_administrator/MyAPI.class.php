@@ -1,4 +1,5 @@
 <?php
+require_once("assets/config/database.php");
 require_once 'API.class.php';
 class MyAPI extends API
 {
@@ -28,17 +29,21 @@ class MyAPI extends API
      *Endpoints
      */
 	 protected function user($jwt) {
+		#split token into three parts
+		$head, $payload, $signiture = explode('.', $jwt);
+		#Since it is a simple register no Signiture Varification is required
+		$list_claim = json_decode(base64_decode($claim));
 		#No signiture create account
 		if($this->method == 'POST') {
-			$qry = $mysqli->prepare("INSERT INTO accounts  (name,sha1,salt,birthday,email, ip) VALUES (?,?,?,?,?,?)");
-			$qry->bind_param("s", $pwdsha1);
+			$qry = $mysqli->prepare("INSERT INTO accounts  (name,sha1,birthday,email, ip) VALUES (?,?,?,?,?,'0.0.0.0')");
+			$qry->bind_param("ssss", $list_claim[''],$list_claim[''],$list_claim[''],$list_claim[''],$list_claim['']);
+			$result = $conn->query($qry);
 		#Gets online users
 		} else if($this->method == 'GET'){
-			$qry = $mysqli->prepare("SELECT * FROM accounts WHERE online = 1");
-			
+			$qry = $mysqli->prepare("SELECT name FROM accounts WHERE current_status = 1");
+			$result = $conn->query($qry);
+			return $result;
 		}
-		#split token into three parts
-		$head, $payload, $signiture = explode('.', $jwt)
 		#varify signiture
 		if (!verifyKey($payload,$signiture)) {
 			if($this->method == 'GET'){
@@ -61,13 +66,9 @@ class MyAPI extends API
 		$list_head = json_decode(base64_decode($claim));
 		$list_claim = json_decode(base64_decode($claim));
 		#grab user from database
-		require_once("assets/config/database.php");
 		$qry = $mysqli->prepare("SELECT sha1 FROM accounts WHERE name = ?");
 		$qry->prepare("s", $list_claim['name']);
 		$result = $conn->query($qry);
-		if(!$mysqli->close()){
-			echo "Could not close MySQL connection.";
-		}
 		if ($result->num_rows < 0){
 			return false;
 		}
@@ -78,6 +79,8 @@ class MyAPI extends API
 		}
 		return true;
 	 }
-	 
+		if(!$mysqli->close()){
+			echo "Could not close MySQL connection.";
+		}
  }
 ?>
