@@ -60,7 +60,13 @@ function convertTime($miliTime) {
 <body>
 	<table style="width:80%">
 		<tr>
-			<th colspan="6" id="title">Spring 2017 Schedule</th>
+			<th colspan="6" id="title">
+				<p>Spring 2017 Schedule</p>
+				<!-- change this to a more appropriate button type -->
+				<form action="add.php">
+					<input id="add" type="submit" value="Add a Class" />
+				</form>
+			</th>
 		</tr>
 		<tr>
 			<th></th>
@@ -77,7 +83,7 @@ function convertTime($miliTime) {
 			<col style="background-color:gray;">
 			<col>
 			<col style="background-color:gray;">
-	
+
 		<!-- php which adds rows based on 1 hr from earliest class, 1 hr after latest class -->
 		<?php
 			$currTime = $earliestTime;

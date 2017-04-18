@@ -19,7 +19,7 @@ if (file_exists($fileName)) {
 <html>
 	<head>
 		<meta charset="utf-8" />
-		<title>Remember the Cow</title>
+		<title>StudyIn</title>
 		<link href="studyin.css" type="text/css" rel="stylesheet" />
 		<link href="http://www.colorado.edu/oit/sites/all/themes/cassowary/images/logo-highres.png" type="image/ico" rel="shortcut icon" />
 	</head>

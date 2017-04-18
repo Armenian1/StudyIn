@@ -27,3 +27,9 @@ body {
 	margin: 10px;
 	float: left;
 }
+
+p {
+	margin: 0px;
+	padding: 0px;
+	display: inline;
+}
