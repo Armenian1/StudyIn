@@ -1,3 +1,4 @@
+class schedule {
 (function() {
 	'use strict';
 
@@ -61,7 +62,7 @@
 	}
 
 	// converts standard to military time
-	function convertStdToMili(stdTime) {
+	public static function convertStdToMili(stdTime) {
 		// http://stackoverflow.com/questions/2400312/substring-with-reverse-index for next line
 		var modifier = stdTime.substring(stdTime.lastIndexOf(':') + 3); // get am/pm
 		var time = stdTime.substring(0, stdTime.lastIndexOf(':') + 3); // get all but am/pm
@@ -99,4 +100,4 @@
 		var time = [miliTime.toString().slice(0, position), ':', miliTime.toString().slice(position)].join('');
 		return time + modifier;
 	}
-})();
+})(); }
