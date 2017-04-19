@@ -7,18 +7,44 @@ CREATE TABLE IF NOT EXISTS accounts (
     id INT(1) NOT NULL AUTO_INCREMENT,
     name VARCHAR(13) NOT NULL,
     sha1 VARCHAR(128) NOT NULL,
-    salt VARCHAR(32) NOT NULL DEFAULT '0000',
     lastlogin TIMESTAMP NULL DEFAULT NULL,
     birthday DATE NOT NULL DEFAULT '0000-00-00',
     administrator INT(1) NOT NULL DEFAULT 0,
 	current_status INT(1) NOT NULL DEFAULT 0,
+    PRIMARY KEY (id)
+)  ENGINE=INNODB DEFAULT CHARSET=UTF8;
+
+INSERT INTO accounts (id, name,password,lastlogin,birthday, administrator, ip) VALUES
+	(1, 'admin', 'a89b8cd1dcee6f4eb91a450dadf49a28d2149240','0000-00-00','0000-00-00','0');
+	(2, 'admin2', 'a89b8cd1dcee6f4eb91a450dadf49a28d2149240','0000-00-00','0000-00-00','0');
+	
+DROP TABLE IF EXISTS tokens;
+CREATE TABLE IF NOT EXISTS tokens (
+    id INT(1) NOT NULL AUTO_INCREMENT,
+    user_id INT(1) NOT NULL,
+    token VARCHAR(255) NOT NULL,
+    life INT(1) NOT NULL DEFAULT 0,
+    created TIMESTAMP NULL DEFAULT '0000-00-00',
+    administrator INT(1) NOT NULL DEFAULT 0,
+	acc_create INT(1) NOT NULL DEFAULT 0,
+	refresh INT(1) NOT NULL DEFAULT 0,
     ip TEXT,
     PRIMARY KEY (id)
 )  ENGINE=INNODB DEFAULT CHARSET=UTF8;
 
-INSERT INTO accounts (id, name,password,salt,lastlogin,birthday, administrator, ip) VALUES
-	(1, 'admin', 'a89b8cd1dcee6f4eb91a450dadf49a28d2149240','0000','0000-00-00','0000-00-00','0' , '127.0.0.1' );
-	(2, 'admin2', 'a89b8cd1dcee6f4eb91a450dadf49a28d2149240','0000','0000-00-00','0000-00-00','0' , '127.0.0.1' );
+INSERT INTO tokens (id, user_id,token,life,created, administrator,post, ip) VALUES
+	(1, '0', '0000','0000','2017-04-18','1' ,1, '127.0.0.1' );
+	
+DROP TABLE IF EXISTS blocked;
+CREATE TABLE IF NOT EXISTS blocked (
+    id INT(1) NOT NULL AUTO_INCREMENT,
+    softban INT(1) NOT NULL DEFAULT 0,
+    life INT(1) NOT NULL DEFAULT 0,
+    created TIMESTAMP NULL DEFAULT '0000-00-00',
+	reason TEXT,
+    ip TEXT,
+    PRIMARY KEY (id)
+)  ENGINE=INNODB DEFAULT CHARSET=UTF8;
     
 DROP TABLE IF EXISTS messages;
 CREATE TABLE IF NOT EXISTS group_wall (
