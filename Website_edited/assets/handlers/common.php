@@ -4,7 +4,7 @@
 
 #URL FOR API
 $api_url = "../../ss_administrator/index.php";
-$APIKey = "5425ff73-a599-4751-8759-7e170e730717"
+$APIKey = "5425ff73-a599-4751-8759-7e170e730717";
 
 #Common functionality for all pages that form the StudyIn website
 # Ensures that there is an existing cookie with a valid token
