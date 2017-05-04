@@ -22,7 +22,7 @@ if(basename($_SERVER["PHP_SELF"]) == "main.php") {
 				No grades or personal information will be used or stored, only class info.
 			</p>
 
-			<form id="loginform" action="login.php" method="post">
+			<form id="loginform" action="../assets/handlers/login.php" method="post">
 				<div><input name="name" type="text" size="8" autofocus="autofocus" /> <strong>User Name</strong></div>
 				<div><input name="password" type="password" size="8" /> <strong>Password</strong></div>
 				<div><input type="submit" value="Log in" /></div>
