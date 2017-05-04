@@ -128,6 +128,7 @@ class User {
 		if($result > 0){
 			return $result[0];
 		}
+			return $this->_response('Not Found', 404);
 	}
 	
 	protected verifyKey($key, $origin){

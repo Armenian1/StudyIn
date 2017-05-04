@@ -2,6 +2,17 @@ DROP DATABASE IF EXISTS StudyIn;
 CREATE DATABASE IF NOT EXISTS StudyIn;
 	USE StudyIn;
 	
+DROP TABLE IF EXISTS api_keys;
+CREATE TABLE IF NOT EXISTS api_keys (
+	id INT(1) NOT NULL AUTO_INCRAMENT,
+	name VARCHAR(20) NOT NULL,
+	api_key VARCHAR(36) NOT NULL,
+	PRIMARY KEY(id)
+) ENGINE=INNODB DEFAULT CHARSERT=UTF8;
+
+INSERT INTO api_keys(id, name, api_key) VALUES
+	(1, 'website', '5425ff73-a599-4751-8759-7e170e730717')
+
 DROP TABLE IF EXISTS accounts;
 CREATE TABLE IF NOT EXISTS accounts (
     id INT(1) NOT NULL AUTO_INCREMENT,
@@ -47,7 +58,7 @@ CREATE TABLE IF NOT EXISTS blocked (
 )  ENGINE=INNODB DEFAULT CHARSET=UTF8;
     
 DROP TABLE IF EXISTS messages;
-CREATE TABLE IF NOT EXISTS group_wall (
+CREATE TABLE IF NOT EXISTS messages (
 	id INT(1) NOT NULL auto_increment,
 	txt VARCHAR(140) NOT NULL,
 	sender_id INT(1) NOT NULL,
@@ -64,12 +75,16 @@ CREATE TABLE IF NOT EXISTS courses (
 	id INT(1) NOT NULL auto_increment,
 	course_id INT(1) NOT NULL,
 	course_name VARCHAR(40) NOT NULL,
-	department_id INT(1) NOT NULL,
+	department_id VARCHAR(40) NOT NULL,
+	section_id INT(1) NOT NULL,
+	days VARCHAR(6),
+	start_time 
+	durration INT(1) NOT NULL,
 	PRIMARY KEY(id)
 	)ENGINE=InnoDB DEFAULT CHARSET=utf8;
 	
-INSERT INTO courses (id,course_id,course_name, department_id) VALUES
-	(1, 3308, 'SoftWare_Development', 1);
+INSERT INTO courses (id,course_id,course_name, department_id,section_id,days, start_time,durration,) VALUES
+	(1, 3308, 'CSCI', 1, 200,"T", 17:00:00, 01:40:00);
 
 DROP TABLE IF EXISTS department;	
 CREATE TABLE IF NOT EXISTS department (
@@ -79,7 +94,7 @@ CREATE TABLE IF NOT EXISTS department (
 	)ENGINE=InnoDB DEFAULT CHARSET=utf8;
 	
 INSERT INTO department (id, name) VALUES
-	(1, 'CSCI');
+	(1, 'CSCI', );
 
 DROP TABLE IF EXISTS groups;	
 CREATE TABLE IF NOT EXISTS groups (

@@ -1,17 +1,21 @@
 <?php
-require_once("assets/config/database.php");
+require_once("../config/database.php");
 
 class APIKey {
-		private $_api_key;
-
-	function __construct($name){
-		$this->_api_key = "5425ff73-a599-4751-8759-7e170e730717";
+	protected $_api_keys;
+	protected $_banned_ip;
+	
+	function __construct(){
+		//get all API keys
+		$this->_api_keys = $conn->query("SELECT api_key FROM api_keys");
+		$this->_banned_ip = $conn->query("SELECT * from blocked")
+		
+		$conn->close();
 	}
 	
 	function __destruct(){
-		unset($this->_user);
-		unset($this->_api_key);
-		unset($this->exp_time);
+		unset($this->$api_keys)
+		unset()
 	}
 	
 	private get_Banned_ip($ip){
@@ -29,13 +33,14 @@ class APIKey {
 	
 	private verifyKey($key, $origin){
 		if(get_Banned_ip($origin)){
-			throw new Exception('Ip is Banned');
+			return $this->_response("Access denied by URL authorization policy on the Web server. $origin", 401.7);
 		}
-		//check if key is correct
-		if($key == $this->_api_key){
-			return true;
+		for 
+		if(!$result < 0){
+			//ERROR API KEY doesnt EXIST
+			return false;
 		}
-		return false;
+		return true;
 	}
 }
 ?>
