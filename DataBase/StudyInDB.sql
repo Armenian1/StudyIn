@@ -4,14 +4,14 @@ CREATE DATABASE IF NOT EXISTS StudyIn;
 	
 DROP TABLE IF EXISTS api_keys;
 CREATE TABLE IF NOT EXISTS api_keys (
-	id INT(1) NOT NULL AUTO_INCRAMENT,
+	id INT(1) NOT NULL AUTO_INCREMENT,
 	name VARCHAR(20) NOT NULL,
 	api_key VARCHAR(36) NOT NULL,
 	PRIMARY KEY(id)
-) ENGINE=INNODB DEFAULT CHARSERT=UTF8;
+) ENGINE=INNODB DEFAULT CHARSET=UTF8;
 
 INSERT INTO api_keys(id, name, api_key) VALUES
-	(1, 'website', '5425ff73-a599-4751-8759-7e170e730717')
+	(1, 'website', '5425ff73-a599-4751-8759-7e170e730717');
 
 DROP TABLE IF EXISTS accounts;
 CREATE TABLE IF NOT EXISTS accounts (
@@ -25,9 +25,8 @@ CREATE TABLE IF NOT EXISTS accounts (
     PRIMARY KEY (id)
 )  ENGINE=INNODB DEFAULT CHARSET=UTF8;
 
-INSERT INTO accounts (id, name,password,lastlogin,birthday, administrator, ip) VALUES
-	(1, 'admin', 'a89b8cd1dcee6f4eb91a450dadf49a28d2149240','0000-00-00','0000-00-00','0');
-	(2, 'admin2', 'a89b8cd1dcee6f4eb91a450dadf49a28d2149240','0000-00-00','0000-00-00','0');
+INSERT INTO accounts (id,name,sha1,lastlogin,birthday, administrator,current_status) VALUES
+	(1,'admin', 'a89b8cd1dcee6f4eb91a450dadf49a28d2149240','0000-00-00','0000-00-00',1,0);
 	
 DROP TABLE IF EXISTS tokens;
 CREATE TABLE IF NOT EXISTS tokens (
@@ -35,16 +34,15 @@ CREATE TABLE IF NOT EXISTS tokens (
     user_id INT(1) NOT NULL,
     token VARCHAR(255) NOT NULL,
     life INT(1) NOT NULL DEFAULT 0,
-    created TIMESTAMP NULL DEFAULT '0000-00-00',
+    created DATETIME NULL DEFAULT '0000-00-00 00:00:00',
     administrator INT(1) NOT NULL DEFAULT 0,
-	acc_create INT(1) NOT NULL DEFAULT 0,
 	refresh INT(1) NOT NULL DEFAULT 0,
     ip TEXT,
     PRIMARY KEY (id)
 )  ENGINE=INNODB DEFAULT CHARSET=UTF8;
 
-INSERT INTO tokens (id, user_id,token,life,created, administrator,post, ip) VALUES
-	(1, '0', '0000','0000','2017-04-18','1' ,1, '127.0.0.1' );
+INSERT INTO tokens (id, user_id,token,life,created, administrator,refresh, ip) VALUES
+	(1, 1, '0000','3000','2017-05-04 05:21:50',1 ,1, '127.0.0.1' );
 	
 DROP TABLE IF EXISTS blocked;
 CREATE TABLE IF NOT EXISTS blocked (
@@ -78,13 +76,13 @@ CREATE TABLE IF NOT EXISTS courses (
 	department_id VARCHAR(40) NOT NULL,
 	section_id INT(1) NOT NULL,
 	days VARCHAR(6),
-	start_time 
-	durration INT(1) NOT NULL,
+	start_time TIME NOT NULL DEFAULT '00:00:00',
+	durration TIME NOT NULL DEFAULT '00:00:00',
 	PRIMARY KEY(id)
 	)ENGINE=InnoDB DEFAULT CHARSET=utf8;
 	
-INSERT INTO courses (id,course_id,course_name, department_id,section_id,days, start_time,durration,) VALUES
-	(1, 3308, 'CSCI', 1, 200,"T", 17:00:00, 01:40:00);
+INSERT INTO courses (id,course_id,course_name, department_id,section_id,days, start_time,durration) VALUES
+	(1, 3308, 'Software Dev','CSCI', 200,"T", '05:00:00', '1:40:00');
 
 DROP TABLE IF EXISTS department;	
 CREATE TABLE IF NOT EXISTS department (
@@ -94,7 +92,7 @@ CREATE TABLE IF NOT EXISTS department (
 	)ENGINE=InnoDB DEFAULT CHARSET=utf8;
 	
 INSERT INTO department (id, name) VALUES
-	(1, 'CSCI', );
+	(1, 'CSCI');
 
 DROP TABLE IF EXISTS groups;	
 CREATE TABLE IF NOT EXISTS groups (
@@ -124,7 +122,7 @@ INSERT INTO group_enrol (id, char_id, group_id,priv_level) VALUE
 	(1,1, 1, 1);
     
 DROP TABLE IF EXISTS course_wall;
-CREATE TABLE IF NOT EXISTS group_wall (
+CREATE TABLE IF NOT EXISTS course_wall (
 	id INT(1) NOT NULL auto_increment,
 	subj VARCHAR(40) NOT NULL,
 	txt VARCHAR(140) NOT NULL,
@@ -136,4 +134,3 @@ CREATE TABLE IF NOT EXISTS group_wall (
 
 INSERT INTO course_wall (id,subj, txt, course_id,group_id) VALUE
 	(1,'Test','testing group ', 3308, 1);
-	
