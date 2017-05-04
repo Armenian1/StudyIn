@@ -9,13 +9,24 @@ class MyAPI extends API
 
         // Abstracted out for example
         $APIKey = new Models\APIKey();
-        $User = new Models\User();
-
+		
+		#Check API Key
         if (!array_key_exists('apiKey', $this->request)) {
             throw new Exception('No API Key provided');
         } else if (!$APIKey->verifyKey($this->request['apiKey'], $origin)) {
             throw new Exception('Invalid API Key');
-        } else if (array_key_exists('token', $this->request) && !$User->get('token', $this->request['token'])) {
+		
+
+
+		//check auth information is there
+		if(!array_key_exists('user', $this->request)) {
+			throw new Exception('No User Provided')
+		}
+		//we can create new user becuase there is a name in request
+		$User = new Models\User($this->request['user']);
+		
+		//Check user to their token
+        if (array_key_exists('token', $this->request) && !$User->get('token', $this->request['token'])) {
             throw new Exception('Invalid User Token');
         } else if (array_key_exists('refreshToken', $this->request) {
 			throw new Exception('Invalid Refresh Token')
@@ -68,11 +79,11 @@ class MyAPI extends API
 		}
 	}
 	
-     protected function message($jwt) {
+     protected function course($jwt) {
         if ($this->method == 'GET') {
-            return "Your name is " . $this->User->name;
+			$this->_response($this->User->get('courses'));
         } else {
-            return "Only accepts GET requests";
+            $this->_response("Method Not DEFINED", 405);
         }
      }
 	 

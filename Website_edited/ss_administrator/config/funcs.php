@@ -110,6 +110,7 @@ function getToken() {
 }
 
 function refreshToken(){
+	
 }
 
 function checkToken(){

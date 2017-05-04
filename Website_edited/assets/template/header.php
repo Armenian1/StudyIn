@@ -10,11 +10,11 @@ if(basename($_SERVER["PHP_SELF"]) == "header.php") {
 	<head>
 		<meta charset="utf-8">
 		<!--- <meta name="viewport" content="width=device-width, initial-scale=1.0"> --->
-		<title>StudyIn |</title>
+		<title>StudyIn | <?php echo $_GET['base'] ?></title>
 		
-		<link rel="icon" href="../../favicon.png" type="image/x-icon" />
-		
-		<!---
+		<link rel="icon" href="../../favicon.ico" type="image/x-icon" />
+		<link href="css/studyin.css" type="text/css" rel="stylesheet" />
+
 		<style type="text/css">
 			body {
 				<?php
@@ -30,8 +30,13 @@ if(basename($_SERVER["PHP_SELF"]) == "header.php") {
 		
 		
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
-		<script src='https://www.google.com/recaptcha/api.js'></script> -->
-		
+		<script src='https://www.google.com/recaptcha/api.js'></script>
 		
 	</head>
 	<body>
+		<div class="headfoot">
+			<h1>
+				<!-- <img id="buff" src="http://carshare.org/2016dev/wp-content/uploads/2013/10/CU-Buffs.png" alt="logo" /> -->
+				StudyIn<br />CU Boulder
+			</h1>
+		</div>

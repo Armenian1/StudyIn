@@ -6,7 +6,10 @@ class User {
 		protected $_id;
 		protected $_exist;
 
-	function __construct($name){
+		
+	//flag 0 = with name
+	//flag 1 = with token
+	function __construct($name,$flag){
 		$this->_user = $name;
 		$this->_id = getID();
 		$this->_exist = exists();
@@ -33,7 +36,32 @@ class User {
 		return 'account created sucessfully';
 	}
 	
-	//NEED EDIT
+	//Get with no Check
+	protected get($variable){
+		switch($variable){
+			case 'courses':
+				$arr = array('user' => array('_id' => '$token_id' => ACTUAL TOKEN),'courses': => array());
+				$qry = $mysqli->prepare("SELECT courses.course_name,courses.course_id,courses.department_id,courses.start_time,courses.days,courses.section_id FROM courses AS c INNER JOIN course_enrol AS ce WHERE ce.user_id = ? AND c.course_id = ce.course_id");
+				$qry->bind_param("s", $this->_id);
+				$result = $conn->query($qry);
+				//if there are results
+				if($result > 0){
+					//save all in result set
+					$resultset = array();
+					while ($row = mysql_fetch_array($results)) {
+					  $resultset[] = $row;
+					}
+					foreach($resultset as $result){
+						array_push($arr[courses], array('name' => $result[0], 'department' => $result[2], 'time' => $result[3].':'.$result[4], 'section'=> $result[5]));
+					}
+				}
+				return $arr
+			case default:
+				return $this->_response("Method Not DEFINED", 405);
+		}
+	}
+
+	//OVERLOAD
 	protected get($variable, $check){
 		switch($variable){
 			case 'token':
@@ -63,7 +91,7 @@ class User {
 				}
 				return false;
 			case default:
-				echo 'Error: Get Variable not defined';
+				return $this->_response("Method Not DEFINED", 405);
 		}
 	}
 	
@@ -87,6 +115,7 @@ class User {
 			
 			$qry = $mysqli->prepare("INSERT INTO tokens (user_id,token,life,created,refresh, ip) VALUES (?,?,?,?,1,?)");
 			$qry->bind_param("is", $this->_id, $newt,360000,$curTime, IP);
+			$result = $conn->query($qry);
 			if (!$result){
 				die('MySQl error:'.$conn->errorInfo());
 			}
@@ -132,8 +161,37 @@ class User {
 	}
 	
 	protected verifyKey($key, $origin){
+		//verifies temp tokens
+		$qry = $mysqli->prepare("SELECT user_id,created, FROM tokens WHERE token=?");
+		$qry->bind_param("s", $key);
+		$result = $conn->query($qry);
+		
+		//Check if key is expired
+		
+		if($result > 0){
+			//key found
+			return true;
+		}
+		//Key is not correct
+		return false
+	}
 	
-	
+	protected verifyRKey($key, $origin){
+		//verifies temp tokens
+		$qry = $mysqli->prepare("SELECT user_id,created, FROM tokens WHERE token=? AND refresh = 1" );
+		$qry->bind_param("s", $key);
+		$result = $conn->query($qry);
+		
+		//Check if key is expired if not mak new token and return
+		if($result > 0){
+			//key found
+			$tok =  generateToken();
+			$qry = $mysqli->prepare("INSERT INTO tokens (user_id,token,life,created,refresh, ip) VALUES (?,?,?,?,1,?)");
+			$qry->bind_param("is", $this->_id, $tok,360000,$curTime, IP);
+			return $tok
+		}
+		//Key is not correct
+		return false
 	}
 }
 ?>

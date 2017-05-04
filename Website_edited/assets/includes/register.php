@@ -1,6 +1,6 @@
 <?php
 #remove
-if(basename($_SERVER["PHP_SELF"]) == "login.php") {
+if(basename($_SERVER["PHP_SELF"]) == "register.php") {
 	die("403 - Access Forbidden");
 }
 
@@ -37,7 +37,7 @@ session_start();
 				<div><p>By creating an account you agree to our <a href="#">Terms & Privacy(COMMING SOON)</a>.</p></div>
 				<div class="clearfix">
 				  <button type="button"  class="cancelbtn">Cancel</button>
-				  <button type="submit" class="signupbtn">Sign Up</button>
+				  <button type="submit" value="register"/>Sign Up</button>
 				</div>
 			</form>
 		</div>

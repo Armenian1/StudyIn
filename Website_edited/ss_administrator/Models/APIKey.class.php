@@ -14,8 +14,8 @@ class APIKey {
 	}
 	
 	function __destruct(){
-		unset($this->$api_keys)
-		unset()
+		unset($this->_api_keys)
+		unset($this->_banned_ip)
 	}
 	
 	private get_Banned_ip($ip){
@@ -32,10 +32,10 @@ class APIKey {
 	}
 	
 	private verifyKey($key, $origin){
+		//checks for banned IP
 		if(get_Banned_ip($origin)){
 			return $this->_response("Access denied by URL authorization policy on the Web server. $origin", 401.7);
-		}
-		for 
+		} 
 		if(!$result < 0){
 			//ERROR API KEY doesnt EXIST
 			return false;

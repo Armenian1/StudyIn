@@ -4,57 +4,41 @@
 #	incorrect password, or creates a new account for the user if provided entirely
 #	new information.
 session_start();
-include('common.php');
+include('/common.php');
 ensureLoggedOut();
 
-$name;
-$password;
+#go to parent directory
+$api_url = "../../ss_administrator/"
 
 #if these values are not null
 if (isset($_POST['name']) && isset($_POST['password'])) {
-	$_SESSION['name'] = $_POST['name'];
-	$_SESSION['password'] = $_POST['password'];
-}
+$client_id = $_POST['name'];
+$client_secret = sha1($_POST['password']);
 
-if (isset($_SESSION['name'])) {
-	header('Location: studyin.php');
-	# check if empty string is "false-y"
-} else if ($name && $password) {
-	$accounts = file('users.txt');
-	checkProperInput($name, $password);
-	
-	
-	$accountFound = false;
-	foreach ($accounts as $account) {
-		$accountInfo = explode(":", $account);
-		list($accountName, $accountPass) = $accountInfo;
-		$accountName = trim($accountName);
-		$accountPass = trim($accountPass);
-		
-		if ($name == $accountName && $password == $accountPass) {
-			$accountFound = true;
-		} else if ($name == $accountName && $password != $accountPass) { // incorrect password
-			header('Location: start.php');
-			die();
-		}
-	}
-	/*
-	at this point, we know that the submitted username and password are well-formed
-	but neither is in the file, so can automatically create a new user/password combo
-	*/
-	if (!$accountFound) {
-		file_put_contents('users.txt', $name . ':' . $password . "\n", FILE_APPEND);
-	}
-	# create session
-	$_SESSION['name'] = $name;
-	$_SESSION['password'] = $password;
-	setDate();
-	
-	#redirects browser
-	header('Location: studyin.php');
-} else {
+$content = array('http' = > array (
+			'header' = >"Authorization: Basic " . base64_encode("$client_id:$client_secret")
+			'method' => 'GET'
+			'content' = > http_build_query($data)
+)
+);
+#Saving temp data 'header' = > "Content-type: application/x-www-form-unlencoded\r\n",
+
+#USE 'header' = > "Content-type: user/"
+
+$context = stream_context_create($content);
+
+$result = file_get_contents($api_url, false, $context);
+if($result == FALSE){ // ERROR HANDLE
 	die('Invalid input - username or password not set: $name = ' . $name . ', $password = ' . $password);
 }
+
+$json = base64_decode($result);
+
+#Otherwise save results to cookie
+setcookie('tToken',$json['tToken'],time()+$json['exptToken']);
+setcookie('rToken',$json['rToken'],time()+$json['exprToken']);
+#redirect
+header('Location: index.php?base=schedule');
 
 # Kills the page if provided improper input, else gives detailed description of what went wrong
 function checkProperInput($name, $password) {
