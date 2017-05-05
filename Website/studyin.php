@@ -27,7 +27,7 @@ if (file_exists($fileName)) {
 	<body>
 		<div class="headfoot">
 			<h1>
-				<!-- <img id="buff" src="http://carshare.org/2016dev/wp-content/uploads/2013/10/CU-Buffs.png" alt="logo" /> -->
+				<img id="buff" src="http://carshare.org/2016dev/wp-content/uploads/2013/10/CU-Buffs.png" alt="logo" />
 				StudyIn<br />CU Boulder
 			</h1>
 		</div>

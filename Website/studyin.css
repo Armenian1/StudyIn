@@ -11,7 +11,7 @@ body {
 	color: #ffd700;
 	margin-top: 0px;
 	margin-bottom: 0px;
-	min-height: 145px;
+	min-height: 155px;
 	padding: 1px;
 	padding-left: 30px;
 }
@@ -24,8 +24,20 @@ body {
 #buff {
 	max-height: 128px;
 	max-width: 175px;
+	margin-top: 0px;
+	position: relative;
+	top: -30px;
 	margin: 10px;
+	margin-right: 20px;
 	float: left;
+}
+
+#w3c {
+	margin-top: 15px;
+}
+
+form {
+	margin: 20px;
 }
 
 p {

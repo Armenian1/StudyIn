@@ -16,6 +16,25 @@ table {
 	color: black;
 }
 
+.headfoot {
+	background-color: black;
+	color: #ffd700;
+	margin-top: 0px;
+	margin-bottom: 0px;
+	min-height: 155px;
+	padding: 1px;
+	padding-left: 30px;
+}
+
+#buff {
+	max-height: 128px;
+	max-width: 175px;
+	margin: 10px;
+	margin-top: 20px;
+	margin-right: 20px;
+	float: left;
+}
+
 th {
 	text-align: center;
 	padding: 10px;
@@ -44,4 +63,8 @@ td {
 th p {
 	margin: 0px;
 	float: left;
+}
+
+#w3c {
+	margin-top: 20px;
 }

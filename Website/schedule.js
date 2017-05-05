@@ -1,4 +1,3 @@
-class schedule {
 (function() {
 	'use strict';
 
@@ -51,8 +50,6 @@ class schedule {
 					var cellNum = dayToIndex[day];
 					var cell = cells[cellNum];
 
-					console.log(time);
-					console.log(convertMiliToStd(time));
 					var timeRange = convertMiliToStd(time) + '-' + convertMiliToStd(time + parseInt(timeInfo[1]));
 					cell.style.backgroundColor = 'green';
 					cell.innerHTML = dpt + ' ' + name + ' ' + sec + '<br/>' + timeRange;
@@ -62,7 +59,7 @@ class schedule {
 	}
 
 	// converts standard to military time
-	public static function convertStdToMili(stdTime) {
+	function convertStdToMili(stdTime) {
 		// http://stackoverflow.com/questions/2400312/substring-with-reverse-index for next line
 		var modifier = stdTime.substring(stdTime.lastIndexOf(':') + 3); // get am/pm
 		var time = stdTime.substring(0, stdTime.lastIndexOf(':') + 3); // get all but am/pm
@@ -100,4 +97,4 @@ class schedule {
 		var time = [miliTime.toString().slice(0, position), ':', miliTime.toString().slice(position)].join('');
 		return time + modifier;
 	}
-})(); }
+})();
