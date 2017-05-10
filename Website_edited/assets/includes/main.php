@@ -2,16 +2,12 @@
 if(basename($_SERVER["PHP_SELF"]) == "main.php") {
 	die("403 - Access Forbidden");
 }
+#header('Location: ../assets/handlers/login.php');
 ?>
 
-		<div class="headfoot">
-			<img id="buff" src="http://carshare.org/2016dev/wp-content/uploads/2013/10/CU-Buffs.png" alt="logo" />
-			<h1>
-				StudyIn<br />CU Boulder
-			</h1>
-		</div>
-
 		<div id="main">
+			<center>
+			<img id="banner" src="http://www1.toronto.ca/City%20Of%20Toronto/City%20Clerks/Elections/Library/Images/library_banner_1140_1140X225.jpg" alt="ban" />
 			<p>
 				The easiest way to start a study group. <br />
 				Provided at least a couple people are using this service, anyway...
@@ -21,10 +17,10 @@ if(basename($_SERVER["PHP_SELF"]) == "main.php") {
 				Log in with your CU Identikey for your information to be filled out automatically. <br />
 				No grades or personal information will be used or stored, only class info.
 			</p>
-
+			</center>
 			<form id="loginform" action="../assets/handlers/login.php" method="post">
-				<div><input name="name" type="text" size="8" autofocus="autofocus" /> <strong>User Name</strong></div>
-				<div><input name="password" type="password" size="8" /> <strong>Password</strong></div>
+				<div> <strong>User Name</strong><input name="name" type="text" size="8" autofocus="autofocus" /></div>
+				<div><strong>Password</strong><input name="password" type="password" size="8" /> </div>
 				<div><input type="submit" value="Log in" /></div>
 			</form>
 		</div>

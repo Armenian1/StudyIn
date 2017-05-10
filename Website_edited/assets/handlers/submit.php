@@ -48,5 +48,5 @@ if ($action == 'add') {
 
 # save file
 file_put_contents($filename, $todo);
-header('Location: studyin.php');
+header('Location: index.php');
 ?>

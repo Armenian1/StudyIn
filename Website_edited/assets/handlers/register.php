@@ -3,39 +3,33 @@ require_once '/../handlers/funcs.php';
 
 $name;
 $password;
+#go to parent directory
+$api_key = '5425ff73-a599-4751-8759-7e170e730717';
 
-#if these values are not null
-if (isset($_POST['name']) && isset($_POST['password'])) {
-	$_SESSION['name'] = $_POST['name'];
-	$_SESSION['password'] = $_POST['password'];
-	$_SESSION['password2'] = $_POST['password2'];
-	$_SESSION['birthday'] = $_POST['birthday'];
-	$_SESSION['email'] = $_POST['email'];	
-}
-
-if (isset($_SESSION['name'])) {
-	header('Location: studyin.php');
+if (isset($_POST['name'])) {
+	header('Location: index.php');
 	# check if empty string is "false-y"
 } else if ($name && $password) {
-	$accounts = file('users.txt');
+	#$accounts = file('users.txt');
 	checkProperInput($name, $password);
-	$head = base64_encode(
-	'{
-		"alg": "HS256",
-		"typ": "JWT"
-	}');
+	$head = base64_encode(json_encode(array('alg' => 'HS256', 'typ' => 'JWT')));
 	
-	$claim = base64_encode(sprintf('{
-		"token_type":"Bearer",
-		"name": "$1",
-		"birthday": "0000-00-00"
-		"email": "$2"
-		"ip": "$3"
-	}'$_SESSION['name'],$_SESSION['email'] ,getRealIpAddr()));
+	$claim = base64_encode(json_encode(array(
+		'request' => 'register',
+		'name' => $_POST['name'],
+		'sha1' = > sha1($_POST['password']),
+		'email' => $_POST['email'],
+		'birthday' = > $_POST['birthday'])));
 	
 	$payload = $head + "." $claim;
 	
-	redirect(/ss_administrator/index.php?request=user/$payload)
+	#redirect(/ss_administrator/index.php?request=user/$payload)
+	$result = file_get_contents('/ss_administrator/index.php?request='.$api_key.'/user/'.$payload);
+	if(isset($result['ttoken'])){
+		#set cookie and redirect
+		setcookie('tToken',$result['tToken'],time()+$result['exptToken']);
+		header('Location: index.php?base=schedule');
+	}
 } else {
 	die('Invalid input - username or password not set: $name = ' . $name . ', $password = ' . $password);
 }

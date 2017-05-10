@@ -63,10 +63,10 @@ $json = json_decode($str, true);
 array_push($json['user']['courses'], $course);
 $data = json_encode($json);
 # print to file
-$jsonFile = fopen('./JSON_example.json', 'w') or die ('Cannot open ./JSON_example.json');
+$jsonFile = fopen('JSON_example.json', 'w') or die ('Cannot open ./JSON_example.json');
 fwrite($jsonFile, $data);
 fclose($jsonFile);
-header('Location: ./studyin.php');
+header('Location: ./index.php?base=schedule');
 
 # now set these values on the server when functioning
 ?>

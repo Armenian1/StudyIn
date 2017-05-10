@@ -3,42 +3,47 @@
 #	returns the user to the starting page if provided a known username and
 #	incorrect password, or creates a new account for the user if provided entirely
 #	new information.
-session_start();
-include('/common.php');
+include('common.php');
 ensureLoggedOut();
 
 #go to parent directory
-$api_url = "../../ss_administrator/"
+$api_key = '5425ff73-a599-4751-8759-7e170e730717';
 
 #if these values are not null
 if (isset($_POST['name']) && isset($_POST['password'])) {
-$client_id = $_POST['name'];
-$client_secret = sha1($_POST['password']);
-
-$content = array('http' = > array (
-			'header' = >"Authorization: Basic " . base64_encode("$client_id:$client_secret")
-			'method' => 'GET'
-			'content' = > http_build_query($data)
-)
-);
-#Saving temp data 'header' = > "Content-type: application/x-www-form-unlencoded\r\n",
-
-#USE 'header' = > "Content-type: user/"
-
-$context = stream_context_create($content);
-
-$result = file_get_contents($api_url, false, $context);
-if($result == FALSE){ // ERROR HANDLE
-	die('Invalid input - username or password not set: $name = ' . $name . ', $password = ' . $password);
+	$client_id = $_POST['name'];
+	$client_secret = sha1($_POST['password']);
+	$claim = array('user'=>'', 'request'=>'');
+	
+	$claim['user'] = $client_id;
+	$claim['request'] = 'token';
+	
+	$data = json_encode($claim);
+	
+	#$token = base64UrlEncode($claim),$client_secret;
+	
+	#$ch = curl_init('../../ss_administrator/'.$api_key.'/auth/');
+	#curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");                                                                     
+	#curl_setopt($ch, CURLOPT_POSTFIELDS, $data);                                                                  
+	#curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);                                                                      
+	#curl_setopt($ch, CURLOPT_HTTPHEADER, array(                                                                          
+	#	'Content-Type: application/json',                                                                                
+	#	'Content-Length: ' . strlen($data))                                                                       
+	#);                                             
+	#$result = curl_exec($ch);
+	header('Location: /ss_administrator/index.php?request='.$api_key.'/auth/');
+	$result = file_get_contents('/ss_administrator/index.php?request='.$api_key.'/auth/');
+	echo($result);
+	#if(isset($result['tToken'])){
+		#Otherwise save results to cookie
+		#setcookie('tToken',$result['tToken'],time()+$result['exptToken']);
+		#setcookie('rToken',$json['rToken'],time()+$json['exprToken']);
+		#header('Location: index.php?base=schedule');
+	#} else {
+	#	header('Location: index.php');
+	#}
 }
 
-$json = base64_decode($result);
-
-#Otherwise save results to cookie
-setcookie('tToken',$json['tToken'],time()+$json['exptToken']);
-setcookie('rToken',$json['rToken'],time()+$json['exprToken']);
-#redirect
-header('Location: index.php?base=schedule');
 
 # Kills the page if provided improper input, else gives detailed description of what went wrong
 function checkProperInput($name, $password) {

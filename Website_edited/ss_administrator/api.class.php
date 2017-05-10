@@ -1,7 +1,6 @@
 <?php
 #API used tutorial from http://coreymaynard.com/blog/creating-a-restful-api-with-php/
-abstract class API
-{
+abstract class API{
     /**
      * Property: method
      * The HTTP method this request was made in, either GET, POST, PUT or DELETE
@@ -21,8 +20,8 @@ abstract class API
     /**
      * Property: args
      * Any additional URI components after the endpoint and verb have been removed, in our
-     * case, an integer ID for the resource. eg: /<endpoint>/<verb>/<arg0>/<arg1>
-     * or /<endpoint>/<arg0>
+     * case, an integer ID for the resource. eg: /APIKEY/<endpoint>/<Token>
+     * or /APIKEY/<endpoint>/<arg0>
      */
     protected $args = Array();
     /**
@@ -39,12 +38,19 @@ abstract class API
         header("Access-Control-Allow-Orgin: *");
         header("Access-Control-Allow-Methods: *");
         header("Content-Type: application/json");
-
+		
         $this->args = explode('/', rtrim($request, '/'));
+		$this->apiKey = array_shift($this->args);
         $this->endpoint = array_shift($this->args);
-        if (array_key_exists(0, $this->args) && !is_numeric($this->args[0])) {
-            $this->verb = array_shift($this->args);
-        }
+		$this->token = array_shift($this->args);
+		#if(current($this->args) == 'token'){
+			#Throw away Value
+			#array_shift($this->args);
+			#$this->token = array_shift($this->args);
+		#}
+       # if (array_key_exists(0, $this->args) && !is_numeric($this->args[0])) {
+        #    $this->verb = array_shift($this->args);
+        #}
 
         $this->method = $_SERVER['REQUEST_METHOD'];
         if ($this->method == 'POST' && array_key_exists('HTTP_X_HTTP_METHOD', $_SERVER)) {
@@ -76,7 +82,9 @@ abstract class API
     }
 	
 	public function processAPI() {
-        if (method_exists($this, $this->endpoint)) {
+        #if (method_exists($this, $this->endpoint)) {
+		#echo($this->endpoint);
+		if(isset($this->endpoint)){
             return $this->_response($this->{$this->endpoint}($this->args));
         }
         return $this->_response("No Endpoint: $this->endpoint", 404);

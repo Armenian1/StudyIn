@@ -1,18 +1,13 @@
-<?php
-if(basename($_SERVER["PHP_SELF"]) == "add.php") {
-	die("403 - Access Forbidden");
-}
-?>
-
-
-
 <!DOCTYPE html>
 <?php
-include('../handlers/common.php');
+#	Form page for adding a class to user's JSON info
+session_start();
+include('common.php');
 ensureLoggedIn();
 # since we know the user is logged in, can directly set name & password
-$token = $_COOKIE['tToken'];
-$rtoken = $_COOKIE['rToken'];
+$name = $_SESSION['name'];
+$password = $_SESSION['password'];
+$todo;
 
 // # generate the proper filename from the given username
 // $fileName = studyinFilename($name);

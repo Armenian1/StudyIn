@@ -18,6 +18,7 @@ CREATE TABLE IF NOT EXISTS accounts (
     id INT(1) NOT NULL AUTO_INCREMENT,
     name VARCHAR(13) NOT NULL,
     sha1 VARCHAR(128) NOT NULL,
+	email VARCHAR(128) NOT NULL,
     lastlogin TIMESTAMP NULL DEFAULT NULL,
     birthday DATE NOT NULL DEFAULT '0000-00-00',
     administrator INT(1) NOT NULL DEFAULT 0,
@@ -25,8 +26,8 @@ CREATE TABLE IF NOT EXISTS accounts (
     PRIMARY KEY (id)
 )  ENGINE=INNODB DEFAULT CHARSET=UTF8;
 
-INSERT INTO accounts (id,name,sha1,lastlogin,birthday, administrator,current_status) VALUES
-	(1,'admin', 'a89b8cd1dcee6f4eb91a450dadf49a28d2149240','0000-00-00','0000-00-00',1,0);
+INSERT INTO accounts (name,sha1,birthday, administrator,current_status) VALUES
+	('admin', 'a89b8cd1dcee6f4eb91a450dadf49a28d2149240','2017-10-04',1,0);
 	
 DROP TABLE IF EXISTS tokens;
 CREATE TABLE IF NOT EXISTS tokens (

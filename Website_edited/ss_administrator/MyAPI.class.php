@@ -1,82 +1,134 @@
 <?php
 require_once 'API.class.php';
+require_once '/Models/APIKey.class.php';
+require_once '/Models/user.class.php';
 class MyAPI extends API
 {
     protected $User;
+    public static $supported_algs = array(
+        'HS256' => array('hash_hmac', 'SHA256'),
+    );
 
     public function __construct($request, $origin) {
         parent::__construct($request);
-
+		//SQL Information
+		$host['hostname'] = 'localhost'; // Hostname [Usually locahost]
+		$host['user'] = 'root'; // Database Username [Usually root]
+		$host['password'] = 'Dragon123.'; // Database Password [Leave blank if unsure]
+		$host['database'] = 'StudyIn'; // Database Name
+		//start SQL session
+		$this->mysqli = new MySQLi($host['hostname'],$host['user'],$host['password'],$host['database']);
+		//Check connection
+		if(mysqli_connect_errno()) {
+			printf("connect failed: %s\n", mysqli_connect_error());
+			exit();
+		}
+		
         // Abstracted out for example
-        $APIKey = new Models\APIKey();
+        $APIKey = new APIKey();
+		#print_r (array_values($this->args));
 		
+		#echo ($this->endpoint);
+		#save ip
+		$this->ip = $origin;
+		#$this->jwt = $this->request[0];
 		#Check API Key
-        if (!array_key_exists('apiKey', $this->request)) {
+        #if (!array_key_exists('apiKey', $this->request)) {
+		if($this->apiKey == null){
             throw new Exception('No API Key provided');
-        } else if (!$APIKey->verifyKey($this->request['apiKey'], $origin)) {
+        #} else if (!$APIKey->verifyKey($this->request['apiKey'], $origin)) {
+		} else if (!$APIKey->verifyKey($this->apiKey, $origin)) {
             throw new Exception('Invalid API Key');
-		
-
-
-		//check auth information is there
-		if(!array_key_exists('user', $this->request)) {
-			throw new Exception('No User Provided')
+		} else if($this->token == null){
+			throw new Exception('No Token Proveded');
 		}
-		//we can create new user becuase there is a name in request
-		$User = new Models\User($this->request['user']);
-		
-		//Check user to their token
-        if (array_key_exists('token', $this->request) && !$User->get('token', $this->request['token'])) {
-            throw new Exception('Invalid User Token');
-        } else if (array_key_exists('refreshToken', $this->request) {
-			throw new Exception('Invalid Refresh Token')
+		#split Token
+		$jwt = explode('.',$this->token);
+		#parse token into sections
+		$this->head = json_decode(base64_decode(array_shift($jwt)),true);
+		$this->claim = json_decode(base64_decode(array_shift($jwt)),true);
+		if($this->head == null or $this->claim == null){
+			throw new Exception('invalid token');
 		}
-
-        $this->User = $User;
+		#Check HEAD
+		#check if token is supported by API
+		#if(!isset($supported_algs[$this->head['alg']])){
+			#throw new Exception('Token algorithim is not supported');
+		#}
+		#Check if Token type is supported ONLY JWT
+		#if($this->head['typ'] != 'jwt'){
+		#	throw new Exception('Token type is not supported');
+		#}
+		#Check sig
+		$this->sig = base64_decode(array_shift($jwt));
+		#If signiture exists
+		if($this->sig == null){
+			#if its not for register
+			if($this->endpoint != 'user' and $this->method != 'POST'){
+				throw new Exception('Signiture missing from Token');
+			} else {
+				#Prepare account setup
+				$this->User = new User($this->claim['name'], 2);
+			}
+		#Authentication through token
+		} else if($this->endpoint != 'auth'){
+			#retrive token
+			$this->User = new User($this->claim['name'], 1);
+			$tok = $this->User->get('token');
+			#verify signiture
+			$payload = base64_encode(json_encode($this->head)) +'.' + base64_encode(json_encode($this->claim));
+			#take and hash payload with token
+			$csigniture =  hash_hmac('sha256', $payload, $tok);
+			if($csigniture != $this->sig){
+				throw new Exception('invalid request');
+			}
+		#Authentication through AUTH with Return of Token
+		} else {
+			#setup Auth User
+			$this->User = new User($this->claim['name'], 0);
+		}
     }
+	
+	protected function onlineUsers(){
+		#require_once("assets/config/database.php");
+		$online_Users = array();
+		$qry = $mysqli->prepare("SELECT name,logged FROM accounts WHERE online = 1");
+		$result2 = $conn->query($qry);
+		#return JSON witha l
+		while($r = mysqli_fetch_assoc($result2)){
+			$online_Users = $r;
+		}
+		return $online_Users;
+	}
 
     /**
      *Endpoints
      */
-	 protected function user($jwt) {
-		$head, $payload = explode('.', $jwt)
-		//if got auth from API key
-		if(!array_key_exists('token', $this->request)){
-			#create account
-			if($this->method == 'POST') {
-				return $User->make(json_decode(base64_decode($payload)));
-			#Gets online users
-			} else if($this->method == 'GET'){
-				require_once("assets/config/database.php");
-				$online_Users = array();
-				$qry = $mysqli->prepare("SELECT name,logged FROM accounts WHERE online = 1");
-				$result2 = $conn->query($qry);
-				#return JSON witha l
-				while($r = mysqli_fetch_assoc($result2)){
-					$online_Users = $r;
-				}
-				closeSQL();	
-				return json_encode($online_Users);
-			} else {
-				return "Invalid request";
+	 protected function user() {
+		#If jwt exists then can get info about account
+		if(isset($jwt)){
+			#Register
+			if($this->method == 'POST'){
+				$User->make($this->claim);
 			}
-		#authenticated through token
-		} else {
-			#Check claim type
-			$list_claim = json_decode(base64_decode($claim));
-			//if token doesnt exist
-			if($this->method == 'GET'){
-				$User->
-			} else if($this->method == 'PUT'){
-			}
-
-		} else {
-			//token session is already created
-			closeSQL();
-			die("JSON encrpytion signiture Incorrectly formated.");
+			
 		}
-			closeSQL();
+	}
+	
+	protected function auth(){
+		#check signiture through password
+		$payload = base64_encode(json_encode($this->head)) +'.' + base64_encode(json_encode($this->claim));
+		#get password from user
+		$pass = $this->User->get('sha1');
+		#take and hash payload with token
+		$csigniture =  hash_hmac('sha256', $payload, $pass);
+		if($csigniture != $this->sig){
+			throw new Exception('invalid username or password');
 		}
+		#JSON
+		$json = json_encode($user->getNewToken($this->ip));
+		#return token
+		$this->_response($json, 200);
 	}
 	
      protected function course($jwt) {
@@ -87,18 +139,12 @@ class MyAPI extends API
         }
      }
 	 
-	private function closeSQL(){
-		if(!$mysqli->close()){
-			echo "Could not close MySQL connection.";
-		}	
-	}
-	 
 	 private function verify_Key($payload,$signiture,$type){
-		$head , $claim =  $explode($payload);
+		list($head , $claim) =  $explode($payload);
 		$list_head = json_decode(base64_decode($claim));
 		$list_claim = json_decode(base64_decode($claim));
 		#grab user from database
-		require_once("assets/config/database.php");
+		#require_once("assets/config/database.php");
 		if ($type === 'false'){
 			$qry = $mysqli->prepare("SELECT sha1 FROM accounts WHERE name = ?");
 			$qry->prepare("s", $list_claim['name']);
@@ -113,13 +159,8 @@ class MyAPI extends API
 			if ($result->num_rows < 0){
 				return false;
 			}
-
 		} else {
-			die("Error incorrect type passed.");
-		}
-		//close MYSQL connection
-		if(!$mysqli->close()){
-			echo "Could not close MySQL connection.";
+			die("Error in Signiture Verification.");
 		}
 		//check depending on algorithim encrpytion type
 		if($list_head['alg'] == "HS256"){

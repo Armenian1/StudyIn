@@ -4,14 +4,7 @@ if(basename($_SERVER["PHP_SELF"]) == "schedule.php") {
 	die("403 - Access Forbidden");
 }
 
-#	Register page for a website which provides a common base to find study groups at CU Boulder
-session_start();
-?>
-
-
-<!DOCTYPE html>
-<?php
-$str = file_get_contents('./JSON_example.json');
+$str = file_get_contents('JSON_example.json');
 $json = json_decode($str, true);
 $courses = $json['user']['courses'];
 # find range of class times to know how many rows to create
@@ -60,54 +53,48 @@ function convertTime($miliTime) {
 }
 ?>
 
-<html>
-<head>
-	<title>My Schedule Page</title>
-	<link href="schedule.css" type="text/css" rel="stylesheet" />
+	<link href="css/schedule.css" type="text/css" rel="stylesheet" />
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
-	<script type="text/javascript" src="schedule.js"></script>
-</head>
+	<script type="text/javascript" src="js/schedule.js"></script>
+	<div id="main">
+		<table style="width:80%">
+			<tr>
+				<th colspan="6" id="title">
+					<p>Spring 2017 Schedule</p>
+					<!-- change this to a more appropriate button type -->
+					<form action="../handlers/add.php">
+						<input id="add" type="submit" value="Add a Class" />
+					</form>
+				</th>
+			</tr>
+			<tr>
+				<th></th>
+				<th>Monday</th>
+				<th>Tuesday</th>
+				<th>Wednesday</th>
+				<th>Thursday</th>
+				<th>Friday</th>
+			</tr>
+			<colgroup>
+				<col>
+				<col style="background-color:gray;"> 
+				<col>
+				<col style="background-color:gray;">
+				<col>
+				<col style="background-color:gray;">
 
-<body>
-	<table style="width:80%">
-		<tr>
-			<th colspan="6" id="title">
-				<p>Spring 2017 Schedule</p>
-				<!-- change this to a more appropriate button type -->
-				<form action="add.php">
-					<input id="add" type="submit" value="Add a Class" />
-				</form>
-			</th>
-		</tr>
-		<tr>
-			<th></th>
-			<th>Monday</th>
-			<th>Tuesday</th>
-			<th>Wednesday</th>
-			<th>Thursday</th>
-			<th>Friday</th>
-		</tr>
-		<colgroup>
-			<col>
-			<col style="background-color:gray;"> 
-			<col>
-			<col style="background-color:gray;">
-			<col>
-			<col style="background-color:gray;">
+			<!-- php which adds rows based on 1 hr from earliest class, 1 hr after latest class -->
+			<?php
+				$currTime = $earliestTime;
 
-		<!-- php which adds rows based on 1 hr from earliest class, 1 hr after latest class -->
-		<?php
-			$currTime = $earliestTime;
-
-			for ($i = 0; $i < $numRows; $i++) {
-		?>
-		<!-- these td elements all go on the same line as tr because of the stupid whitespace error
-			 when using the firstChild/childNodes properties of a node in pure javascript -->
-		<tr class="class"><td class="time_col"><?php echo convertTime($currTime); ?></td><td></td><td></td><td></td><td></td><td></td></tr>
-		<?php
-				$currTime += 100; # increment by an hour each time
-			}
-		?>
-	</table>
-</body>
-</html>
+				for ($i = 0; $i < $numRows; $i++) {
+			?>
+			<!-- these td elements all go on the same line as tr because of the stupid whitespace error
+				 when using the firstChild/childNodes properties of a node in pure javascript -->
+			<tr class="class"><td class="time_col"><?php echo convertTime($currTime); ?></td><td></td><td></td><td></td><td></td><td></td></tr>
+			<?php
+					$currTime += 100; # increment by an hour each time
+				}
+			?>
+		</table>
+	</div>

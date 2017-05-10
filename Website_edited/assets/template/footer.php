@@ -5,8 +5,6 @@ if(basename($_SERVER["PHP_SELF"]) == "footer.php") {
 
 
 ?>
-
-
 			<br/><br/><br/>
 			<div>
 			<?php

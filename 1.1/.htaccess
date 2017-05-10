@@ -1,7 +1,0 @@
-<IfModule mod_rewrite.c>
-    RewriteEngine On
-    RewriteCond %{REQUEST_FILENAME} !-f
-	RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteRule ^((?s).*)$ index.php?base=/$1 [QSA,L]
-	RewriteRule ss_administrator/(.*)$ ss_administrator/index.php?request=$1 [QSA,NC,L]
-</IfModule>

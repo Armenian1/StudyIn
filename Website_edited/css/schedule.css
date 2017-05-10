@@ -1,0 +1,47 @@
+body {
+	font-family: sans-serif;
+}
+
+table {
+	width: 80%;
+	margin: 0 auto;
+	border-collapse: collapse;
+}
+
+#title {
+	text-align: left;
+	padding: 15px;
+	font-size: 20px;
+	background-color: gold;
+	color: black;
+}
+
+th {
+	text-align: center;
+	padding: 10px;
+	font-size: 16px;
+	color: white;
+	background-color: black;
+}
+
+td {
+	text-align: center;
+	font-size: 14px;
+	padding: 5px;
+	line-height: 20px;
+	border-bottom: 1px solid black;
+}
+
+.time_col {
+	border: none;
+}
+
+#add {
+	float: right;
+	font-size: 20px;
+}
+
+th p {
+	margin: 0px;
+	float: left;
+}
