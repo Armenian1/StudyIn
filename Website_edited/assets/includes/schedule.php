@@ -62,7 +62,7 @@ function convertTime($miliTime) {
 				<th colspan="6" id="title">
 					<p>Spring 2017 Schedule</p>
 					<!-- change this to a more appropriate button type -->
-					<form action="../handlers/add.php">
+					<form action="../assets/handlers/add.php">
 						<input id="add" type="submit" value="Add a Class" />
 					</form>
 				</th>

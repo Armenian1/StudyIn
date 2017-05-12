@@ -9,7 +9,7 @@ if(basename($_SERVER["PHP_SELF"]) == "footer.php") {
 			<div>
 			<?php
 			if($getbase == "schedule" ){
-				echo "<a href='logout.php'><strong>Log Out</strong></a>";
+				echo "<a href='../assets/handlers/logout.php'><strong>Log Out</strong></a>";
 				echo "<em>(logged in since";
 				echo $_COOKIE['date'];
 				echo ")</em>";
