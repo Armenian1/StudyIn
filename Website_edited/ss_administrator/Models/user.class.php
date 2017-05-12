@@ -11,10 +11,10 @@ class User {
 	//flag 2 = new account
 	function __construct($name,$flag){
 		//SQL Information
-		$host['hostname'] = 'localhost'; // Hostname [Usually locahost]
-		$host['user'] = 'root'; // Database Username [Usually root]
-		$host['password'] = 'Dragon123.'; // Database Password [Leave blank if unsure]
-		$host['database'] = 'StudyIn'; // Database Name
+		$host['hostname'] = 'mysql.studyin.dreamhosters.com'; // Hostname [Usually locahost]
+		$host['user'] = 'jimyou5'; // Database Username [Usually root]
+		$host['password'] = '4ba1-z9sd-5jgh.'; // Database Password [Leave blank if unsure]
+		$host['database'] = 'studyindb'; // Database Name
 		//start SQL session
 		$this->mysqli = new MySQLi($host['hostname'],$host['user'],$host['password'],$host['database']);
 		//Check connection
@@ -62,6 +62,16 @@ class User {
 			die('Error in Account Creation Query.'.$this->mysqli->errorInfo());
 		}
 		return 'account created sucessfully';
+	}
+	
+	function generateToken() {
+		$token = '';
+		$len = 64;
+		for($i = 0; $i < 256; $i++){
+			$token .= md5(microtime(true.mt_rand(10000,90000)));
+		}
+		$token = substr($token,0,$len);
+		return $token;
 	}
 	
 	//Get with no Check
@@ -116,17 +126,25 @@ class User {
 				throw new Exception('No Token Found for User');
 				break;
 			case 'sha1':
-				$qry = ("SELECT sha1 FROM accounts where name =?");
+				$qry = ("SELECT sha1 FROM accounts WHERE name=?");
 				if ($stmt = $this->mysqli->prepare($qry)) {
 					$stmt->bind_param("s", $this->_user);
-					#If tokens are found
 					$stmt->execute();
-					$result = $stmt->get_result();
-					if($result->num_rows > 0){
-						return $result;
+					#If tokens are found
+					$stmt->bind_result($pass);
+					$stmt->fetch();
+					if($pass != null){
+						return $pass;
+					} else {
+						throw new Exception('Account not found');
 					}
+					#$result = $stmt->fetch_array(MYSQLI_ASSOC);
+					#$result = $stmt->get_result();
+					#echo $result;
+					#if($result->num_rows > 0){
+						#return $result->fetch_array(MYSQLI_ASSOC);
+					#}
 				}
-				throw new Exception('Account not found');
 				break;
 			default:
 				return $this->_response("Method Not DEFINED", 405);
@@ -198,12 +216,12 @@ class User {
 	}
 	
 	function getNewToken($origin){
-		$newt = generateToken();
+		$newt = $this->generateToken();
 		date_default_timezone_set("MST"); 
-		$curTime = time();
+		$date = date("Y-m-d H:i:s");
 		#insert token into database
-		$qry = $this->mysqli->prepare("INSERT INTO tokens (user_id,token,life,created,refresh, ip) VALUES (?,?,?,?,1,?)");
-		$qry->bind_param("is", $this->_id, $newt,360000,$curTime,$origin);
+		$qry = $this->mysqli->prepare("INSERT INTO tokens (user_id,token, ip) VALUES (?,?,?)");
+		$qry->bind_param("iss", $this->_id, $newt,'127.0.0.1');
 		$mysqli->prepare($qry);
 		#If tokens are found
 		$qry->execute();
@@ -218,15 +236,6 @@ class User {
 		//calculate 
 		$_SERVER['REQUEST_TIME'];
 	
-	}
-	
-	private function generateToken() {
-		$token = '';
-		for($i = 0; $i < 256; $i++){
-			$token .= md5(microtime(true.mt_rand(10000,90000)));
-		}
-		$token = substr($sec,0,$len);
-		return $token;
 	}
 	
 	function exists(){

@@ -7,10 +7,10 @@ class APIKey {
 	
 	function __construct(){
 		//SQL Information
-		$host['hostname'] = 'localhost'; // Hostname [Usually locahost]
-		$host['user'] = 'root'; // Database Username [Usually root]
-		$host['password'] = 'Dragon123.'; // Database Password [Leave blank if unsure]
-		$host['database'] = 'StudyIn'; // Database Name
+		$host['hostname'] = 'mysql.studyin.dreamhosters.com'; // Hostname [Usually locahost]
+		$host['user'] = 'jimyou5'; // Database Username [Usually root]
+		$host['password'] = '4ba1-z9sd-5jgh.'; // Database Password [Leave blank if unsure]
+		$host['database'] = 'studyindb'; // Database Name
 		//start SQL session
 		$this->conn = new MySQLi($host['hostname'],$host['user'],$host['password'],$host['database']);
 		//Check connection
