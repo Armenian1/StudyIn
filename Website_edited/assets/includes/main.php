@@ -17,6 +17,14 @@ if(basename($_SERVER["PHP_SELF"]) == "main.php") {
 				Log in with your CU Identikey for your information to be filled out automatically. <br />
 				No grades or personal information will be used or stored, only class info.
 			</p>
+			<?php 
+			if(isset($GLOBALS['error'])){
+				echo '<p style="color: red">'.'Error logging In:'.$GLOBALS['error'].'</p>';
+				#clear error after display
+				unset($GLOBALS['error']) ;
+			}
+			?>
+			
 			</center>
 			<form id="loginform" action="../assets/handlers/login.php" method="post">
 				<div> <strong>User Name</strong><input name="name" type="text" size="8" autofocus="autofocus" /></div>

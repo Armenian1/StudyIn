@@ -43,8 +43,8 @@ CREATE TABLE IF NOT EXISTS tokens (
     PRIMARY KEY (id)
 )  ENGINE=INNODB DEFAULT CHARSET=UTF8;
 
-INSERT INTO tokens (id, user_id,token,life,created, administrator,refresh, ip) VALUES
-	(1, 1, '0000','3000','2017-05-04 05:21:50',1 ,1, '127.0.0.1' );
+INSERT INTO tokens (user_id,token,created,experation, administrator,refresh,use_times, ip) VALUES
+	(1, '0000','2017-05-04 05:21:50','2017-05-04 07:21:50',1 ,1,0, '127.0.0.1' );
 	
 DROP TABLE IF EXISTS blocked;
 CREATE TABLE IF NOT EXISTS blocked (

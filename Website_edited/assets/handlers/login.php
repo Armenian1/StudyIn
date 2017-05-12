@@ -20,28 +20,34 @@ if (isset($_POST['name']) && isset($_POST['password'])) {
 	
 	$data = json_encode($claim);
 	$token = makeToken($data,$client_secret); 
-	#$token = base64UrlEncode($claim),$client_secret;
-	
-	#$ch = curl_init('../../ss_administrator/'.$api_key.'/auth/');
-	#curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");                                                                     
-	#curl_setopt($ch, CURLOPT_POSTFIELDS, $data);                                                                  
-	#curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);                                                                      
-	#curl_setopt($ch, CURLOPT_HTTPHEADER, array(                                                                          
-	#	'Content-Type: application/json',                                                                                
-	#	'Content-Length: ' . strlen($data))                                                                       
-	#);                                             
-	#$result = curl_exec($ch);
-	#header('Location: /ss_administrator/index.php?request='.$api_key.'/auth/'.$token);
-	$result = file_get_contents('/ss_administrator/index.php?request='.$api_key.'/auth/.'..$token);
-	$result = json_decode($result);
-	echo($result);
-	#if(isset($result['tToken'])){
-		#Otherwise save results to cookie
-		#setcookie('tToken',$result['tToken'],time()+$result['exptToken']);
-		#setcookie('rToken',$json['rToken'],time()+$json['exprToken']);
-		#header('Location: index.php?base=schedule');
+
+	$url = '/ss_administrator/index.php?request='.$api_key.'/auth/'.$token;
+	#$result = file_get_contents('/ss_administrator/index.php?request='.$api_key.'/auth/.'.$token);
+	$result = curl_request($url);
+	$result = json_decode($result,true);
+	if(isset($result['error'])){
+		#Error in Loggin in Display on page
+		$GLOBALS['error'] = $result['error'];
+		echo $result['error'];
+	}
+	$result = json_decode($result,true);
+	#if(isset(!$result['token'])){
+		#echo $result['token'];
+	setcookie('token',$result['token'],date()+3600);
+	#setcookie('logTime',$result['created']);
+	setDate();
+	#if(isset($_COOKIE['cookie']) && isset($_COOKIE['logTime'])){
+	header('Location: /index.php?base=schedule');
 	#} else {
-	#	header('Location: index.php');
+	#	$GLOBALS['error'] = 'Unable to retrive token.';
+	#}
+		#setcookie('Token',$result['token'],time()+$result['exptToken']);
+		#setcookie('rToken',$json['rToken'],time()+$json['exprToken']);
+	#} else {
+		#Error
+		#header('Location: /index.php');
+	#	echo $result['token'];
+	#	header('Location: /assets/handlers/test.php');
 	#}
 }
 

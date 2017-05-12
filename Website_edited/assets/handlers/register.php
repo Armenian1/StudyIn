@@ -12,26 +12,32 @@ if (isset($_POST['name'])) {
 } else if ($name && $password) {
 	#$accounts = file('users.txt');
 	checkProperInput($name, $password);
-	$head = base64_encode(json_encode(array('alg' => 'HS256', 'typ' => 'JWT')));
-	
-	$claim = base64_encode(json_encode(array(
+	$claim = json_encode(array(
 		'request' => 'register',
 		'name' => $_POST['name'],
 		'sha1' = > sha1($_POST['password']),
 		'email' => $_POST['email'],
-		'birthday' = > $_POST['birthday'])));
+		'birthday' = > $_POST['birthday']));
 	
-	$payload = $head + "." $claim;
 	
+	$payload = makeRegToken($claim);
+	$url = '/ss_administrator/index.php?request='.$api_key.'/register/'.$payload;
 	#redirect(/ss_administrator/index.php?request=user/$payload)
-	$result = file_get_contents('/ss_administrator/index.php?request='.$api_key.'/user/'.$payload);
-	if(isset($result['ttoken'])){
-		#set cookie and redirect
-		setcookie('tToken',$result['tToken'],time()+$result['exptToken']);
-		header('Location: index.php?base=schedule');
+	$result = curl_request($url);
+	$result = json_decode($result,true);
+	if(isset($result['error'])){
+		#Error in Loggin in Display on page
+		$GLOBALS['error'] = $result['error'];
+		echo $result['error'];
 	}
-} else {
-	die('Invalid input - username or password not set: $name = ' . $name . ', $password = ' . $password);
+	$result = json_decode($result,true);
+	#if(isset(!$result['token'])){
+		#echo $result['token'];
+	setcookie('token',$result['token'],date()+3600);
+	#setcookie('logTime',$result['created']);
+	setDate();
+	#if(isset($_COOKIE['cookie']) && isset($_COOKIE['logTime'])){
+	header('Location: /index.php?base=schedule');
 }
 
 # Kills the page if provided improper input, else gives detailed description of what went wrong

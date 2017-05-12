@@ -50,7 +50,7 @@ class User {
 		unset($this->_exist);
 	}
 	
-	function make($list_claim, $ip){
+	function make($list_claim){
 		if ($this->_exists === true){
 			throw new Exception('Account Already Exists');
 		}
@@ -59,9 +59,9 @@ class User {
 		$qry->bind_param("ssss", $this->_user, $list_claim['sha1'],list_claim['email'],list_claim['birthday']);
 		$result = $this->mysqli->query($qry);
 		if(!$result){
-			die('Error in Account Creation Query.'.$this->mysqli->errorInfo());
+			throw new Exception('Error Creating Account');
 		}
-		return 'account created sucessfully';
+		return true;
 	}
 	
 	function generateToken() {
@@ -138,12 +138,6 @@ class User {
 					} else {
 						throw new Exception('Account not found');
 					}
-					#$result = $stmt->fetch_array(MYSQLI_ASSOC);
-					#$result = $stmt->get_result();
-					#echo $result;
-					#if($result->num_rows > 0){
-						#return $result->fetch_array(MYSQLI_ASSOC);
-					#}
 				}
 				break;
 			default:
@@ -215,26 +209,42 @@ class User {
 		return token;
 	}
 	
+	#get new session/REFRESH token
 	function getNewToken($origin){
 		$newt = $this->generateToken();
 		date_default_timezone_set("MST"); 
 		$date = date("Y-m-d H:i:s");
-		$ip = '127.0.0.1';
+		#$expDate = $date->add(new DateInterval('P7Y5M4DT4H3M2S'));
+		#echo $expDate;
+		$expDate = $date;
+		#$ip = '127.0.0.1';
+		$used = 0;
+		$administrator = 0;
+		$refresh = 1;
 		#insert token into database
-		$qry = $this->mysqli->prepare("INSERT INTO tokens (user_id,token, ip) VALUES (?,?,?)");
-		$qry->bind_param("iss", $this->_id, $newt,$ip);
+		$qry = $this->mysqli->prepare("INSERT INTO tokens (user_id,token,created,experation, administrator,refresh,use_times, ip) VALUES (?,?,?,?,?,?,?,?)");
+		$qry->bind_param("isssiiis", $this->_id, $newt,$date,$date,$administrator,$refresh,$used,$origin);
 		#$mysqli->prepare($qry);
 		#If tokens are found
-		if (!$qry->execute()){
+		if(!$qry->execute()){
 			die('MySQl error:'.$qry->errorCode());
 		}
-		return $newt;
+		#create array with token and exp date
+		$reply = array('token' => $newt, 'token_exp'=> $expDate, 'created' => $date);
+		
+		return $reply;
 	}
 	
-	function isExpired($date,$life){
+	function isExpired($expDate){
+		$expDate = DateTime($expDate);
+		#assumes datetime is returned as string
+		date_default_timezone_set("MST"); 
+		$date = date("Y-m-d H:i:s");
 		//calculate 
-		$_SERVER['REQUEST_TIME'];
-	
+		if($date > $expDate){
+			return True;
+		}
+		return False;
 	}
 	
 	function exists(){
@@ -257,42 +267,6 @@ class User {
 			return $result[0];
 		}
 			return $this->_response('Not Found', 404);
-	}
-	
-	function verifyKey($key, $origin){
-		//verifies temp tokens
-		$qry = $this->mysqli->prepare("SELECT user_id,created, FROM tokens WHERE token=?");
-		$qry->bind_param("s", $key);
-		$qry->execute();
-		$qry->store_result();
-		#$result = $this->mysqli->query($qry);
-		
-		//Check if key is expired
-		
-		if($qry->num_rows > 0){
-			//key found
-			return true;
-		}
-		//Key is not correct
-		return false;
-	}
-	
-	function verifyRKey($key, $origin){
-		//verifies temp tokens
-		$qry = $this->mysqli->prepare("SELECT user_id,created, FROM tokens WHERE token=? AND refresh = 1" );
-		$qry->bind_param("s", $key);
-		$result = $this->mysqli->query($qry);
-		
-		//Check if key is expired if not mak new token and return
-		if($result > 0){
-			//key found
-			$tok =  generateToken();
-			$qry = $this->mysqli->prepare("INSERT INTO tokens (user_id,token,life,created,refresh, ip) VALUES (?,?,?,?,1,?)");
-			$qry->bind_param("is", $this->_id, $tok,360000,$curTime, IP);
-			return $tok;
-		}
-		//Key is not correct
-		return false;
 	}
 
 }

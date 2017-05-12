@@ -2,6 +2,7 @@
 require_once 'API.class.php';
 require_once '/Models/APIKey.class.php';
 require_once '/Models/user.class.php';
+#require_once 'common.php';
 class MyAPI extends API
 {
     protected $User;
@@ -11,6 +12,7 @@ class MyAPI extends API
 
     public function __construct($request, $origin) {
         parent::__construct($request);
+		//SQL Information
 		//SQL Information
 		$host['hostname'] = 'mysql.studyin.dreamhosters.com'; // Hostname [Usually locahost]
 		$host['user'] = 'jimyou5'; // Database Username [Usually root]
@@ -27,6 +29,9 @@ class MyAPI extends API
         // Abstracted out for example
         $APIKey = new APIKey();
 		#print_r (array_values($this->args));
+		#since null not working
+		$this->head = '';
+		$this->claim = '';
 		
 		#echo ($this->endpoint);
 		#save ip
@@ -44,12 +49,36 @@ class MyAPI extends API
 		}
 		#split Token
 		$jwt = explode('.',$this->token);
+		#print_r($jwt);
 		#parse token into sections
-		$this->head = json_decode(base64_decode(array_shift($jwt)),true);
-		$this->claim = json_decode(base64_decode(array_shift($jwt)),true);
-		if($this->head == null or $this->claim == null){
+		$this->head = array_shift($jwt);
+		$this->claim = array_shift($jwt);
+		#echo $this->claim;
+		$this->check = $this->head.".".$this->claim;
+		#echo $this->check;
+		if($this->head == '' or $this->claim == ''){
 			throw new Exception('invalid token');
 		}
+		
+		#$this->head = json_decode(base64decodeURL($this->head),true);
+		#$this->claim = json_decode(base64decodeURL($this->claim),true);
+		
+		#fix head and claim
+		$data = str_replace(array('-','_'),array('+','/'),$this->head);
+		$mod4 = strlen($data) % 4;
+		if ($mod4) {
+			$data .= substr('====', $mod4);
+		}
+		$this->head = json_decode(base64_decode($data),true);
+		
+		$data = str_replace(array('-','_'),array('+','/'),$this->claim);
+		$mod4 = strlen($data) % 4;
+		if ($mod4) {
+			$data .= substr('====', $mod4);
+		}
+		$this->claim =  json_decode(base64_decode($data),true);
+		
+		#print_r(json_decode(base64decodeURL($this->head),true));
 		#Check HEAD
 		#check if token is supported by API
 		#if(!isset($supported_algs[$this->head['alg']])){
@@ -60,7 +89,7 @@ class MyAPI extends API
 		#	throw new Exception('Token type is not supported');
 		#}
 		#Check sig
-		$this->sig = base64_decode(array_shift($jwt));
+		$this->sig = array_shift($jwt);
 		#If signiture exists
 		if($this->sig == null){
 			#if its not for register
@@ -75,10 +104,8 @@ class MyAPI extends API
 			#retrive token
 			$this->User = new User($this->claim['name'], 1);
 			$tok = $this->User->get('token');
-			#verify signiture
-			$payload = base64_encode(json_encode($this->head)) +'.' + base64_encode(json_encode($this->claim));
 			#take and hash payload with token
-			$csigniture =  hash_hmac('sha256', $payload, $tok);
+			$csigniture =  hash_hmac('sha256', $this->check, $tok);
 			if($csigniture != $this->sig){
 				throw new Exception('invalid request');
 			}
@@ -116,21 +143,27 @@ class MyAPI extends API
 	}
 	
 	protected function auth(){
-		#check signiture through password
-		$payload = base64_encode(json_encode($this->head)) +'.' + base64_encode(json_encode($this->claim));
 		#get password from user
 		$pass = $this->User->get('sha1');
 		#take and hash payload with token
-		$csigniture =  hash_hmac('sha256', $payload, $pass);
+		$csigniture =  hash_hmac('sha256', $this->check, $pass);
 		if($csigniture != $this->sig){
 			throw new Exception('invalid username or password');
 		}
 		#JSON
-		$json = json_encode($user->getNewToken($this->ip));
-		#return token
-		return $this->_response($json, 200);
+		$reply = $this->User->getNewToken($this->ip);
+
+		return $this->_response($reply);
 	}
 	
+	protected function register(){
+		if($this->User->make($this->claim)){
+			$reply = this->User->getNewToken($this->ip);
+			return $this->_response($reply);
+		}
+		throw new Exception('Error Creating Account');
+	}
+
      protected function course($jwt) {
         if ($this->method == 'GET') {
 			$this->_response($this->User->get('courses'));

@@ -52,7 +52,7 @@ function makeToken($cliam, $secret){
 	return $json_head  + "." + base64UrlEncode($claim) + "." + $signiture;
 }
 
-function makeLoginToken($claim){
+function makeRegToken($claim){
 	return $json_head  + "." + base64UrlEncode($claim);
 }
 
