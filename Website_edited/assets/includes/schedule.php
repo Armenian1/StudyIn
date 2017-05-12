@@ -4,7 +4,8 @@ if(basename($_SERVER["PHP_SELF"]) == "schedule.php") {
 	die("403 - Access Forbidden");
 }
 
-$str = file_get_contents('JSON_example.json');
+# Make this talk with the server or add.php won't work at all
+$str = getJSONSchedule(); # file_get_contents('JSON_example.json');
 $json = json_decode($str, true);
 $courses = $json['user']['courses'];
 # find range of class times to know how many rows to create
@@ -18,6 +19,11 @@ $latestTime += 200;
 # now calculate how many rows will be needed (1 row/hour increment from earliest to latest time)
 $totalTime = $latestTime - $earliestTime;
 $numRows = $totalTime / 100;
+
+function getJSONSchedule(/* whatever variable needed to talk to server */) {
+	# grab user's schedule info
+	return file_get_contents('JSON_example.json');
+}
 
 function findEarliestTime($courses) {
 	$earliest = 2359; # need some initial value for comparison

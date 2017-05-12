@@ -4,16 +4,6 @@
 session_start();
 include('common.php');
 ensureLoggedIn();
-# since we know the user is logged in, can directly set name & password
-$name = $_SESSION['name'];
-$password = $_SESSION['password'];
-$todo;
-
-// # generate the proper filename from the given username
-// $fileName = studyinFilename($name);
-// if (file_exists($fileName)) {
-// 	$todo = file($fileName);
-// }
 ?>
 
 <html>
@@ -56,7 +46,7 @@ $todo;
 			</form>
 
 			<h3>Current Schedule:</h3>
-			<?php include('schedule.php'); ?>
+			<?php include('../includes/schedule.php'); ?>
 
 			<br /><br /><br />
 			<div>
@@ -68,8 +58,7 @@ $todo;
 
 		<div class="headfoot">
 			<p>
-				<q>StudyIn is nice, but I'm pretty sure the name violates some serious trademark laws.</q> - PCWorld<br />
-				All pages and content &copy; Copyright a couple clueless college kids ltd.
+				<q>StudyIn is nice, best thing ever invented for students.</q> - PCWorld<br />
 			</p>
 
 			<div id="w3c">
