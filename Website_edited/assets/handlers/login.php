@@ -19,7 +19,7 @@ if (isset($_POST['name']) && isset($_POST['password'])) {
 	$claim['request'] = 'token';
 	
 	$data = json_encode($claim);
-	
+	$token = makeToken($data,$client_secret); 
 	#$token = base64UrlEncode($claim),$client_secret;
 	
 	#$ch = curl_init('../../ss_administrator/'.$api_key.'/auth/');
@@ -31,8 +31,9 @@ if (isset($_POST['name']) && isset($_POST['password'])) {
 	#	'Content-Length: ' . strlen($data))                                                                       
 	#);                                             
 	#$result = curl_exec($ch);
-	header('Location: /ss_administrator/index.php?request='.$api_key.'/auth/');
-	$result = file_get_contents('/ss_administrator/index.php?request='.$api_key.'/auth/');
+	#header('Location: /ss_administrator/index.php?request='.$api_key.'/auth/'.$token);
+	$result = file_get_contents('/ss_administrator/index.php?request='.$api_key.'/auth/.'..$token);
+	$result = json_decode($result);
 	echo($result);
 	#if(isset($result['tToken'])){
 		#Otherwise save results to cookie

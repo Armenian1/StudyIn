@@ -39,6 +39,10 @@ function makeToken($cliam, $secret){
 	return $json_head  + "." + base64UrlEncode($claim) + "." + $signiture;
 }
 
+function makeLoginToken($claim){
+	return $json_head  + "." + base64UrlEncode($claim);
+}
+
 #checks if token is expired
 #function checkTokenLife(type){
 #	if(type == 'refresh'){
