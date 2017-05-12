@@ -219,15 +219,14 @@ class User {
 		$newt = $this->generateToken();
 		date_default_timezone_set("MST"); 
 		$date = date("Y-m-d H:i:s");
+		$ip = '127.0.0.1';
 		#insert token into database
 		$qry = $this->mysqli->prepare("INSERT INTO tokens (user_id,token, ip) VALUES (?,?,?)");
-		$qry->bind_param("iss", $this->_id, $newt,'127.0.0.1');
-		$mysqli->prepare($qry);
+		$qry->bind_param("iss", $this->_id, $newt,$ip);
+		#$mysqli->prepare($qry);
 		#If tokens are found
-		$qry->execute();
-		$result = $qry->get_result();
-		if (!$result){
-			die('MySQl error:'.$this->mysqli->errorInfo());
+		if (!$qry->execute()){
+			die('MySQl error:'.$qry->errorCode());
 		}
 		return $newt;
 	}
