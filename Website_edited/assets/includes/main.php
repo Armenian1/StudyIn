@@ -14,8 +14,9 @@ if(basename($_SERVER["PHP_SELF"]) == "main.php") {
 			</p>
 
 			<p>
-				Log in with your CU Identikey for your information to be filled out automatically. <br />
-				No grades or personal information will be used or stored, only class info.
+				Enter your class schedule and find others with similar study times. <br />
+				Or enter your non-class schedule and find who is free for whatever purpose at whatever time. <br />
+				Come to think of it, why has nobody added social functionality to a basic calendar?
 			</p>
 			<?php 
 			if(isset($GLOBALS['error'])){

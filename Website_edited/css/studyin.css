@@ -8,11 +8,12 @@ body {
 
 .headfoot {
 	background-color: black;
-	color: #ffd700;
+	color: #ffff00;
 	margin-top: 0px;
 	margin-bottom: 0px;
-	min-height: 145px;
-	padding: 1px;
+	min-height: 120px;
+    padding: 1px;
+	padding-left: 10px;
 }
 
 #main {
@@ -21,9 +22,10 @@ body {
 }
 
 #buff {
-	max-height: 128px;
-	max-width: 175px;
+	max-height: 100px;
+	max-width: 140px;
 	margin: 10px;
+    margin-top: 0px;
 	float: left;
 }
 
