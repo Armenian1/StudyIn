@@ -1,6 +1,6 @@
 <?php 
 #start or resume session
-include('assets/handlers/common.php');
+include('/assets/handlers/common.php');
 
 $args = isset($_GET['base']) ? $_GET['base'] : "";
 #Had to change whole website to use tokens for data transfer ##unsecure however Setting cookies were dissapearing

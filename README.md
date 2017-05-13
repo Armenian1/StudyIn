@@ -1,4 +1,8 @@
 http://studyin.dreamhosters.com/
+Ease of Access Login
+@user - admin
+@password - admin
+
 
 # StudyIn
 

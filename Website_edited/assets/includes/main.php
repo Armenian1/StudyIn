@@ -3,7 +3,7 @@ if(basename($_SERVER["PHP_SELF"]) == "main.php") {
 	die("403 - Access Forbidden");
 }
 #header('Location: ../assets/handlers/login.php');
-session_start();
+#session_start();
 ?>
 
 		<div id="main">
