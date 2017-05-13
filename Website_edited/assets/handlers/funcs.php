@@ -32,39 +32,6 @@ function redirect($url) {
     }
 }
 
-function login() {
-	if(empty($_POST['username'])) {
-		$this->HandleError("UserName is empty!");
-		return false;
-	}
-	if(empty($_POST['password'])) {
-		$this->HandleError("Password is empty!");
-		return false;
-	}
-	$username = trim($_POST['username']);
-	$password = trim($_POST['password']);
-	
-	$salt = getSalt();
-	$head = base64_encode(
-	'{
-		"alg": "HS256",
-		"typ": "JWT"
-	}');
-	
-	$claim = base64_encode(sprintf('{
-		"salt": "$1",
-		"token_type":"Bearer",
-		"name": "$2",
-	}',$salt, $username,getRealIpAddr()));
-	
-	$payload = $head + "." $claim;
-	
-	$secret = hash_hmac($salt,sha1($password));
-	$signiture = hash_hmac('sha256',$payload,$secret);
-	#redirect and send request to Rest Server
-	redirect(/ss_administrator/index.php?request=login/$payload. '.' .$signiture);
-}
-
 function redirect_wait5($url) {
 	echo '<meta http-equiv="refresh" content="5;url='.$url.'" />';
 	exit;
@@ -90,7 +57,7 @@ function ago($time) {
 function getSalt() {
 	$salt = '';
 	for($i = 0; $i < 32; $i++){
-		$salt .= md5(microtime(true.mt_rand(10000,90000));
+		$salt .= md5(microtime(true.mt_rand(10000,90000)));
 	}
 	$salt = substr($sec,0,$len);
     return $salt;

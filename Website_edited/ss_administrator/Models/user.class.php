@@ -51,17 +51,19 @@ class User {
 	}
 	
 	function make($list_claim){
-		if ($this->_exists === true){
+		if($this->_id != 0){
 			throw new Exception('Account Already Exists');
 		}
+		$this->mysqli = new MySQLi($host['hostname'],$host['user'],$host['password'],$host['database']);
 		//create account
-		$qry = $this->mysqli->prepare("INSERT INTO accounts  (name,sha1,email,birthday) VALUES (?,?,?,?)");
-		$qry->bind_param("ssss", $this->_user, $list_claim['sha1'],list_claim['email'],list_claim['birthday']);
-		$result = $this->mysqli->query($qry);
-		if(!$result){
-			throw new Exception('Error Creating Account');
+		$qry = ("INSERT INTO accounts  (name,sha1,email,birthday) VALUES (?,?,?,?)");
+		if ($stmt = $this->mysqli->prepare($qry)) {
+			$stmt->bind_param("ssss", $this->_user, $list_claim['sha1'],list_claim['email'],list_claim['birthday']);
+			if($stmt->execute()){
+				return true;
+			}
 		}
-		return true;
+		throw new Exception('Error Creating Account');
 	}
 	
 	function generateToken() {
@@ -81,36 +83,27 @@ class User {
 				#$arr = array('user' => array('_id' => array('$token_id' : get('token'))),'courses'=> array());
 				#$arr = {'user':'1'};
 				#$arr = {'user': {'_id':{'$token_id':get('token')}},'courses':{}};
-				$vars = array
-				(
-					'user' => array
-					(
-						'_id' => array
-						(
+				$vars = array(
+					'user' => array(
+						'_id' => array(
 							'token_id' => get('token'),
 						),
-						'courses'=> array
-						(
+						'courses'=> array(
 							'empty' => 'empty'
 						)
 					)
 				);
-				
-				$qry = $this->mysqli->prepare("SELECT courses.course_name,courses.course_id,courses.department_id,courses.start_time,courses.days,courses.section_id FROM courses AS c INNER JOIN course_enrol AS ce WHERE ce.user_id = ? AND c.course_id = ce.course_id");
-				$qry->bind_param("s", $this->_id);
-				$result = $this->mysqli->query($qry);
-				//if there are results
-				if($result > 0){
-					//save all in result set
-					$resultset = array();
-					while ($row = mysql_fetch_array($results)) {
-					  $resultset[] = $row;
-					}
-					foreach($resultset as $result){
-						array_push($arr[courses], array('name' => $result[0], 'department' => $result[2], 'time' => $result[3].':'.$result[4], 'section'=> $result[5]));
+				$qry = ("SELECT courses.course_name,courses.course_id,courses.department_id,courses.start_time,courses.days,courses.section_id FROM courses AS c INNER JOIN course_enrol AS ce WHERE ce.user_id = ? AND c.course_id = ce.course_id");
+				if ($stmt = $this->mysqli->prepare($qry)) {
+					$stmt->bind_param("i", $this->_id);
+					$stmt->execute();
+					#If tokens are found
+					$stmt->bind_result($name,$id,$dep,$time,$days,$section);
+					while ($stmt->fetch()) {
+						array_push($vars['user']['courses'], array('name' => $name, 'department' => $dep, 'time' => $time.' '.$days, 'section'=> $section));
 					}
 				}
-				return $arr;
+				return $vars;
 				break;
 			case 'token':
 				$qry = ("SELECT token FROM tokens where user_id =?");
@@ -143,40 +136,6 @@ class User {
 			default:
 				return $this->_response("Method Not DEFINED", 405);
 				break;
-		}
-	}
-
-	//OVERLOAD
-	function getCheck($variable, $check){
-		switch($variable){
-			case 'token':
-				$qry = $this->mysqli->prepare("SELECT tokens.* FROM tokens AS t INNER JOIN accounts AS a ON a.id = t.user_id WHERE a.name = ?");
-				$qry->bind_param("s", $name);
-				$result = $this->mysqli->query($qry);
-				if (!$result){
-					//error in running SQL
-					die('Could not run Token query:'.mysql_error());
-				}
-				//user tokens are found
-				foreach($result->result() as $row){
-					//check if token is expired
-					#$row = explode()
-					//delete if expired
-					if(isExpired($created, $exp)){
-						$qry = $this->mysqli->prepare("DELETE FROM tokens WHERE id=?");
-						$qry->bind_param("i", $this->_id);
-						$result = $this->mysqli->query($qry);
-						if(!$result){
-							die('MySQl error:'.$this->mysqli->errorInfo());
-						}
-					}
-					if($check == $row){
-						return true;
-					}
-				}
-				return false;
-			default:
-				return $this->_response("Method Not DEFINED", 405);
 		}
 	}
 	
@@ -223,6 +182,9 @@ class User {
 		$refresh = 1;
 		#insert token into database
 		$qry = $this->mysqli->prepare("INSERT INTO tokens (user_id,token,created,experation, administrator,refresh,use_times, ip) VALUES (?,?,?,?,?,?,?,?)");
+		if(!$qry){
+			throw new Exception('Error in prepareing Token Query');
+		}
 		$qry->bind_param("isssiiis", $this->_id, $newt,$date,$date,$administrator,$refresh,$used,$origin);
 		#$mysqli->prepare($qry);
 		#If tokens are found

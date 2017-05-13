@@ -2,17 +2,17 @@
 if(basename($_SERVER["PHP_SELF"]) == "footer.php") {
     die("403 - Access Forbidden");
 }
-
-
 ?>
 			<br/><br/><br/>
 			<div>
 			<?php
-			if($getbase == "schedule" ){
-				echo "<a href='../assets/handlers/logout.php'><strong>Log Out</strong></a>";
-				echo "<em>(logged in since";
-				echo $_COOKIE['date'];
-				echo ")</em>";
+			if($base == "schedule" ){
+				if(isset($_COOKIE['timelog'])){
+					echo "<a href='../assets/handlers/logout.php'><strong>Log Out</strong></a>";
+					echo "<em>(logged in since";
+					echo $_COOKIE['timelog'];
+					echo ")</em>";
+				}
 			}
 			?>
 			</div>

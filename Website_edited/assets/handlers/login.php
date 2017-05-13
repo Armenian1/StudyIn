@@ -4,7 +4,7 @@
 #	incorrect password, or creates a new account for the user if provided entirely
 #	new information.
 include('common.php');
-ensureLoggedOut();
+#ensureLoggedOut();
 
 #go to parent directory
 $api_key = '5425ff73-a599-4751-8759-7e170e730717';
@@ -13,31 +13,45 @@ $api_key = '5425ff73-a599-4751-8759-7e170e730717';
 if (isset($_POST['name']) && isset($_POST['password'])) {
 	$client_id = $_POST['name'];
 	$client_secret = sha1($_POST['password']);
-	$claim = array('user'=>'', 'request'=>'');
+	$claim = array('name'=>'', 'request'=>'');
 	
-	$claim['user'] = $client_id;
+	$claim['name'] = $client_id;
 	$claim['request'] = 'token';
 	
 	$data = json_encode($claim);
 	$token = makeToken($data,$client_secret); 
 
-	$url = '/ss_administrator/index.php?request='.$api_key.'/auth/'.$token;
-	#$result = file_get_contents('/ss_administrator/index.php?request='.$api_key.'/auth/.'.$token);
-	$result = curl_request($url);
-	$result = json_decode($result,true);
-	if(isset($result['error'])){
+	$url = 'http://'.$_SERVER['SERVER_ADDR'].'/ss_administrator/index.php?request='.$api_key.'/auth/'.$token;
+	#$url = $_SERVER['DOCUMENT_ROOT'].'/ss_administrator/index.php?request=5425ff73-a599-4751-8759-7e170e730717/auth/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiIiwicmVxdWVzdCI6InRva2VuIiwibmFtZSI6ImFkbWluIn0.aa994bece22a4f2cdb43803039d762c83f7a6d07530abfb55df1a2a0dd9ac2fa';
+		
+	$result = curl_request($url,'GET');
+	#$result = json_decode($result,true);
+	#redirect to login page to handle
+	header('Location: http://'.$_SERVER["SERVER_ADDR"].'/index.php?base=login/'.base64encodeURL($result));
+	
+	#header('Location: '.$url);
+	#if(isset($result['error'])){
 		#Error in Loggin in Display on page
-		$GLOBALS['error'] = $result['error'];
-		echo $result['error'];
-	}
-	$result = json_decode($result,true);
-	#if(isset(!$result['token'])){
+		#$GLOBALS['error'] = $result['error'];
+		#echo 'in error';
+		#global $error = $result['error'];
+		#$_POST['error'] = $result['error'];
+		#setcookie('error',$result['error']);
+		#echo $result['error'];
+		#header('Location: /index.php');
+	#}
+	#$result = json_decode($result,true);
+	#if(isset($result['token'])){
 		#echo $result['token'];
-	setcookie('token',$result['token'],date()+3600);
+	#	setcookie('token',$result['token'],$result['token_exp']);
+	#	echo 'intoken';
+	#	header('Location: /index.php?base=schedule');
+	#}
 	#setcookie('logTime',$result['created']);
-	setDate();
+	#setDate();
 	#if(isset($_COOKIE['cookie']) && isset($_COOKIE['logTime'])){
-	header('Location: /index.php?base=schedule');
+	#	header('Location: /index.php?base=schedule');
+	#}
 	#} else {
 	#	$GLOBALS['error'] = 'Unable to retrive token.';
 	#}

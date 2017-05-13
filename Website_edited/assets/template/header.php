@@ -12,7 +12,7 @@ if(basename($_SERVER["PHP_SELF"]) == "header.php") {
 <html lang="en">
 	<head>
 		<meta charset="utf-8">
-		<!--- <meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
+		<!--- <meta name="viewport" content="width=device-width, initial-scale=1.0"> --->
 		<?php
 		
 		if(isset($_GET['base'])){
@@ -44,10 +44,22 @@ if(basename($_SERVER["PHP_SELF"]) == "header.php") {
 		<script src='https://www.google.com/recaptcha/api.js'></script>
 		
 	</head>
-	<body>
+		<div class="topnav" id="myTopnav">
+			<a href="/index.php">Login</a>
+			<a href="/index.php?base=register">Register</a>
+			<?php 
+			if(isset($_COOKIE['token'])) {
+				echo '<a href="/index.php?base=schedule">Schedule</a>';
+			}
+			?>
+	</div>
 		<div class="headfoot">
 			<h1>
 				<img id="buff" src="http://carshare.org/2016dev/wp-content/uploads/2013/10/CU-Buffs.png" alt="logo" />
 				StudyIn<br />CU Boulder
 			</h1>
 		</div>
+
+	
+	<body>
+		

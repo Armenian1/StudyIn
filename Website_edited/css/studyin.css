@@ -1,3 +1,28 @@
+.topnav {
+  overflow: hidden;
+  background-color: #333;
+}
+
+.topnav a {
+  float: left;
+  display: block;
+  color: #f2f2f2;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 17px;
+}
+
+.topnav a:hover {
+  background-color: #ddd;
+  color: black;
+}
+
+.topnav a.active {
+    background-color: #4CAF50;
+    color: white;
+}
+
 body {
 	margin: 0px;
 	padding-top: 0px;
@@ -8,12 +33,11 @@ body {
 
 .headfoot {
 	background-color: black;
-	color: #ffff00;
+	color: #ffd700;
 	margin-top: 0px;
 	margin-bottom: 0px;
-	min-height: 120px;
-    padding: 1px;
-	padding-left: 10px;
+	min-height: 145px;
+	padding: 1px;
 }
 
 #main {
@@ -22,10 +46,9 @@ body {
 }
 
 #buff {
-	max-height: 100px;
-	max-width: 140px;
+	max-height: 128px;
+	max-width: 175px;
 	margin: 10px;
-    margin-top: 0px;
 	float: left;
 }
 

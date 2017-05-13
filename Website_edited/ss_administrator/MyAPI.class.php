@@ -13,7 +13,6 @@ class MyAPI extends API
     public function __construct($request, $origin) {
         parent::__construct($request);
 		//SQL Information
-		//SQL Information
 		$host['hostname'] = 'mysql.studyin.dreamhosters.com'; // Hostname [Usually locahost]
 		$host['user'] = 'jimyou5'; // Database Username [Usually root]
 		$host['password'] = '4ba1-z9sd-5jgh.'; // Database Password [Leave blank if unsure]
@@ -93,7 +92,7 @@ class MyAPI extends API
 		#If signiture exists
 		if($this->sig == null){
 			#if its not for register
-			if($this->endpoint != 'user' and $this->method != 'POST'){
+			if($this->endpoint != 'register' and $this->method != 'POST'){
 				throw new Exception('Signiture missing from Token');
 			} else {
 				#Prepare account setup
@@ -131,6 +130,7 @@ class MyAPI extends API
     /**
      *Endpoints
      */
+	 #used for getting token from refresh token, Unimplamented for errors in code
 	 protected function user() {
 		#If jwt exists then can get info about account
 		if(isset($jwt)){
@@ -141,37 +141,43 @@ class MyAPI extends API
 			
 		}
 	}
-	
+	#use for getting Token
 	protected function auth(){
-		#get password from user
-		$pass = $this->User->get('sha1');
-		#take and hash payload with token
-		$csigniture =  hash_hmac('sha256', $this->check, $pass);
-		if($csigniture != $this->sig){
-			throw new Exception('invalid username or password');
-		}
-		#JSON
-		$reply = $this->User->getNewToken($this->ip);
+		if($this->method == 'GET'){
+			#get password from user
+			$pass = $this->User->get('sha1');
+			#take and hash payload with token
+			$csigniture =  hash_hmac('sha256', $this->check, $pass);
+			if($csigniture != $this->sig){
+				throw new Exception('invalid username or password');
+			}
+			#JSON
+			$reply = $this->User->getNewToken($this->ip);
 
-		return $this->_response($reply);
-	}
-	
-	protected function register(){
-		if($this->User->make($this->claim)){
-			$reply = this->User->getNewToken($this->ip);
 			return $this->_response($reply);
+		} else {
+			return $this->_response("Method Not DEFINED", 405);
 		}
-		throw new Exception('Error Creating Account');
 	}
-
+	#use for registering
+	protected function register(){
+		if($this->method == 'POST'){
+			$this->User->make($this->claim);
+			$reply = $this->User->getNewToken($this->ip);
+			return $this->_response($reply);
+		} else {
+			return $this->_response("Method Not DEFINED", 405);
+		}
+	}
+	#use for getting courses from database
      protected function course($jwt) {
         if ($this->method == 'GET') {
-			$this->_response($this->User->get('courses'));
+			return $this->_response($this->User->get('courses'));
         } else {
-            $this->_response("Method Not DEFINED", 405);
+            return $this->_response("Method Not DEFINED", 405);
         }
      }
-	 
+	 #unused
 	 private function verify_Key($payload,$signiture,$type){
 		list($head , $claim) =  $explode($payload);
 		$list_head = json_decode(base64_decode($claim));

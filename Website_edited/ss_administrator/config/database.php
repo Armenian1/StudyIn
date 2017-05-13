@@ -9,6 +9,13 @@ $host['hostname'] = 'mysql.studyin.dreamhosters.com'; // Hostname [Usually locah
 $host['user'] = 'jimyou5'; // Database Username [Usually root]
 $host['password'] = '4ba1-z9sd-5jgh.'; // Database Password [Leave blank if unsure]
 $host['database'] = 'studyindb'; // Database Name
+//start SQL session
+$this->mysqli = new MySQLi($host['hostname'],$host['user'],$host['password'],$host['database']);
+//Check connection
+if(mysqli_connect_errno()) {
+	printf("connect failed: %s\n", mysqli_connect_error());
+	exit();
+}
 
 
 #function makeConn(){

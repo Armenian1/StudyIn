@@ -3,6 +3,7 @@ if(basename($_SERVER["PHP_SELF"]) == "main.php") {
 	die("403 - Access Forbidden");
 }
 #header('Location: ../assets/handlers/login.php');
+session_start();
 ?>
 
 		<div id="main">
@@ -19,10 +20,19 @@ if(basename($_SERVER["PHP_SELF"]) == "main.php") {
 				Come to think of it, why has nobody added social functionality to a basic calendar?
 			</p>
 			<?php 
-			if(isset($GLOBALS['error'])){
-				echo '<p style="color: red">'.'Error logging In:'.$GLOBALS['error'].'</p>';
-				#clear error after display
-				unset($GLOBALS['error']) ;
+			if(isset($json)){
+				if(isset($json['error'])){
+					echo '<p style="color: red">'.'Error: '.$json['error'].'</p>';
+					#clear error after display
+					#unset($GLOBALS['error']) ;
+				} else {
+					$json = json_decode($json, true);
+					if(isset($json['token'])){
+						setcookie('token', $json['token'], $json['token_exp']);
+						setcookie('timelog', $json['created']);
+						header('Location: /index.php?base=schedule');
+					}
+				}
 			}
 			?>
 			
