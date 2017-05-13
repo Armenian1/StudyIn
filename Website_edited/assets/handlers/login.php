@@ -21,13 +21,13 @@ if (isset($_POST['name']) && isset($_POST['password'])) {
 	$data = json_encode($claim);
 	$token = makeToken($data,$client_secret); 
 
-	$url = 'http://'.$_SERVER['SERVER_ADDR'].'/ss_administrator/index.php?request='.$api_key.'/auth/'.$token;
+	$url = "http://studyin.dreamhosters.com".'/ss_administrator/index.php?request='.$api_key.'/auth/'.$token;
 	#$url = $_SERVER['DOCUMENT_ROOT'].'/ss_administrator/index.php?request=5425ff73-a599-4751-8759-7e170e730717/auth/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiIiwicmVxdWVzdCI6InRva2VuIiwibmFtZSI6ImFkbWluIn0.aa994bece22a4f2cdb43803039d762c83f7a6d07530abfb55df1a2a0dd9ac2fa';
 		
 	$result = curl_request($url,'GET');
 	#$result = json_decode($result,true);
 	#redirect to login page to handle
-	header('Location: http://'.$_SERVER["SERVER_ADDR"].'/index.php?base=login/'.base64encodeURL($result));
+	header('Location: http://studyin.dreamhosters.com'.'/index.php?base=login/'.base64encodeURL($result));
 	
 	#header('Location: '.$url);
 	#if(isset($result['error'])){

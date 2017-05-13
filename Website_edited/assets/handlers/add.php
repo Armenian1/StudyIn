@@ -3,7 +3,7 @@
 #	Form page for adding a class to user's JSON info
 session_start();
 include('common.php');
-ensureLoggedIn();
+#ensureLoggedIn();
 ?>
 
 <html>

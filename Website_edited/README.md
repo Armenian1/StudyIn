@@ -31,3 +31,6 @@ The software development methodology our team will most closely follow is Agile.
 
 Collaboration Tool:
 The collaboration tool our team will be using for coordination of work and communication among team members is Slack. For data sharing we will be developing and sharing code via github.
+
+NOTE 5/12 : 
+Deployment Seems to still be having issues with security changes due to webhost disableing many PHP features.

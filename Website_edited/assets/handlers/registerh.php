@@ -18,7 +18,7 @@ if (isset($_POST['name']) && isset($_POST['password'])) {
 	
 	if($_POST['password'] != $_POST['password2']){
 		#passwords do not match
-		header('Location: http://'.$_SERVER["SERVER_ADDR"].'/index.php?base=register/'.base64encodeURL($err));
+		header('Location: http://studyin.dreamhosters.com'.'/index.php?base=register/'.base64encodeURL($err));
 	}
 	
 	$claim = json_encode(array(
@@ -30,10 +30,10 @@ if (isset($_POST['name']) && isset($_POST['password'])) {
 	
 	
 	$token = makeRegToken($claim);
-	$url = 'http://'.$_SERVER['SERVER_ADDR'].'/ss_administrator/index.php?request='.$api_key.'/register/'.$token;
+	$url = "http://studyin.dreamhosters.com".'/ss_administrator/index.php?request='.$api_key.'/register/'.$token;
 	#header('Location: '.$url);
 	$result = curl_request($url,'POST');
-	header('Location: http://'.$_SERVER["SERVER_ADDR"].'/index.php?base=register/'.base64encodeURL(json_encode($result)));
+	header('Location: http://studyin.dreamhosters.com'.'/index.php?base=register/'.base64encodeURL(json_encode($result)));
 }
 
 # Kills the page if provided improper input, else gives detailed description of what went wrong
